@@ -30,7 +30,7 @@ class StudentController extends Controller
                     ->groupBy('gender')->get();
 
         # SQL Exception
-        $data = Students::where('id', 101)->firstOrFail()->get();
+        $data = Students::where('id', 100)->firstOrFail()->get();
 
         return view('students.index', ['students' => $data]);
     }
