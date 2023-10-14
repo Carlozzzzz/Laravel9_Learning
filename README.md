@@ -12,3 +12,9 @@ run the following commands
 -- composer install
 run the server
 -- php artisan serve
+
+
+
+# Usefull commans
+    
+        -- ctrl + p = finding file
