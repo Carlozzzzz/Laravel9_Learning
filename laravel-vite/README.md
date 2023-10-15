@@ -29,3 +29,7 @@
             }
         },
 
+
+# time stamp
+https://www.youtube.com/watch?v=tJQ70MYbgHE&list=PLKyjE37ORK3IUmxexDccrPbjzkfPU9Vux&index=6
+22:59
