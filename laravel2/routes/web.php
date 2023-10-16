@@ -80,15 +80,37 @@ use Illuminate\Http\Request;
 
 ##
 
-
-Route::get('/', function(){
-    return view('welcome');
-});
-
-Route::get('/users', [UserController::class, 'index'])->name('login');
+Route::get('/users', [UserController::class, 'index']);
 
 Route::get('/user/{id}', [UserController::class, 'show2']);
 
 // Student Route
-Route::get('/students', [StudentController::class, 'whereID']);
-Route::get('/student/{id}', [StudentController::class, 'show']);
+Route::get('/students', [StudentController::class, 'index']);
+// Route::get('/student/{id}', [StudentController::class, 'show']);
+
+
+// Common routes naming
+// index - Show all data or student
+// show - show a single data or student
+// create - show a form to a new user
+// store - store a data
+// edit - show a form to edit a data
+// update - update a data
+// destroy - delete a data
+
+Route::controller(UserController::class)->group(function() {
+    Route::get('/register','register');
+    Route::get('/login','login')->name('login')->middleware('guest');
+    Route::post('/login/process','process');
+    Route::post('/logout','logout');
+    Route::post('/store','store');
+});
+
+Route::controller(StudentController::class)->group(function() {
+    Route::get('/', 'index')->middleware('auth');
+    Route::get('/add/student', 'create');
+    Route::post('/add/student', 'store');
+    Route::get('/student/{id}', 'show');
+    Route::put('/student/{student}', 'update');
+    Route::delete('/student/{student}', 'destroy');
+});

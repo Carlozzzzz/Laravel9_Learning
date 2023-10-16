@@ -5,8 +5,22 @@
         php artisan serve
     
     * Install the tailwind
-        npx tailwindcss init -p
+        -- npm install -D tailwindcss postcss autoprefixer
+        -- npx tailwindcss init -p
         -- this one is using vite js
+    * Vite Configuration - vite.config.js
+        server: {
+            hmr: {
+                host: 'localhost'
+            }
+        },
+
+    * Tailwind Config at tailwind.config.js
+        content: [
+            "./resources/**/*.blade.php",
+            "./resources/**/*.js",
+            "./resources/**/*.vue",
+        ],
 
     * add the following command at public/css/app.css
         @tailwind base;
@@ -22,10 +36,5 @@
 
 
 # important notes
-    * Change Vite Confiuration : add the ff
-         server: {
-            hmr: {
-                host: 'localhost'
-            }
-        },
+   
 
