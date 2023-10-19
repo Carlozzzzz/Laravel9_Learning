@@ -28,9 +28,10 @@
 ## Package needed
         ** Intervention image
             -- composer require intervention/image
+            -- php artisan storage:link
+            
             == using this package, you need to link the storage blablabla
             == cofigure this when will try to upload on server at (**config/filesystems.php => 'links')
-            -- php artisan storage:link
 
             Sample code to execute
                 -- create sumlink.php

@@ -62,7 +62,7 @@
                 
                 <div class="mb-6 pt-4 rounded bg-gray-200">
                     <label for="email" class="block text-gray-700 text-sm font-bold mb-2 ml-3">Email</label>
-                    <input type="email" name="email" id="email" class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-400 px-3" autocomplete="off" value={{$student->email}}>
+                    <input type="email" name="email" id="email" class="bg-gray-200 rounded w-full text-gray-700 focus:outline-none border-b-4 border-gray-400 px-3" autocomplete="off" value={{ $student->email}}>
                     @error('email')
                         <p class="text-red-500 text-xs p-1">
                             {{ $message }}

@@ -88,7 +88,6 @@ class StudentController extends Controller
 
         }
 
-
         $student->update($validated);
 
         return back()->with('message', 'Data was successfully updated.');
@@ -106,6 +105,7 @@ class StudentController extends Controller
         });
         $img->save($path);
     }
+
 }
 
 
