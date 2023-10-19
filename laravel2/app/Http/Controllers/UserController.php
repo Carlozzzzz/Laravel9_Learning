@@ -60,7 +60,7 @@ class UserController extends Controller
         // @dd($request);
         $validated = $request->validate([
             "name" => ['required', 'min:4'],
-            "email" => ['required', 'email', Rule::unique('users', 'enail')],
+            "email" => ['required', 'email', Rule::unique('users', 'email')],
             "password" => 'required|confirmed|min:6',
             "password_confirmation" => 'required'
         ]);
