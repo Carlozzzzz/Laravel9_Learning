@@ -7,8 +7,8 @@ https://www.youtube.com/watch?v=sPMtPrBR5Cc&list=PLKyjE37ORK3IUmxexDccrPbjzkfPU9
 # Setup the Composer-laravel first
         ** run the following commands
             -- composer global require laravel/installer
-            -- laravel new laravel1
-            -- cd laravel1
+            -- laravel new laravel
+            -- cd laravel
             -- composer install
 
         **run the server
