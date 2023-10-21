@@ -52,6 +52,9 @@ Route::group(['middleware' => ['auth']], function() {
         Route::get('/users', 'index');
         Route::get('/users/create', 'create');
         Route::post('/users/store', 'store');
+        Route::get('/users/edit/{id}', 'edit');
+        Route::put('/users/update/{user}', 'update');
+        Route::delete('/users/delete/{user}', 'destroy');
     });
 
 });
