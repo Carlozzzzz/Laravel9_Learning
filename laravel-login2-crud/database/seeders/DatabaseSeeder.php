@@ -20,12 +20,16 @@ class DatabaseSeeder extends Seeder
         \App\Models\User::create([
             'name' => 'Carlos Romulo',
             'email' => 'carlos@romulo.com',
+            'job' => 'Junior Web Developer',
+            'age' => 22,
             'password' => Hash::make('1234'),
         ]);
 
         \App\Models\User::create([
             'name' => 'Admin User',
             'email' => 'admin@admin.com',
+            'job' => 'IT Specialist',
+            'age' => 50,
             'password' => Hash::make('1234'),
 
 
