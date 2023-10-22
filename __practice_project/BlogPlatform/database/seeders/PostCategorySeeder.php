@@ -2,10 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\PostCategory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class BlogSeeder extends Seeder
+class PostCategorySeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,6 +15,6 @@ class BlogSeeder extends Seeder
      */
     public function run()
     {
-        //
+        PostCategory::factory(100)->create();
     }
 }

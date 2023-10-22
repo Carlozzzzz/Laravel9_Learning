@@ -12,9 +12,7 @@
     -- npm install
 
 ## Model | Controller | Migration | Factory | Seeders
-    -- php artisan make:model Blog -mfs
     -- php artisan make:model Post -mfs
-    -- php artisan make:controller BlogController
     -- php artisan make:controller PostController
     -- php artisan make:controller UserController
 
