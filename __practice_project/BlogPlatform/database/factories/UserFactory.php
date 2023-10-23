@@ -17,9 +17,10 @@ class UserFactory extends Factory
      */
     public function definition()
     {
-        $gender = fake()->randomElement($array = array('male','female'));
+        $gender = fake()->randomElement($array = array('Male','Female'));
 
         return [
+            'user_image' => fake()->imageUrl(360, 360, 'people', true),
             'name' => fake()->name($gender) ,
             'gender' => $gender,
             'email' => fake()->unique()->safeEmail(),

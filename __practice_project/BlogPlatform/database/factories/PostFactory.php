@@ -16,9 +16,17 @@ class PostFactory extends Factory
      */
     public function definition()
     {
+        $category = fake()->randomElement($array = array(
+            'cat',
+            'dog',
+            'bird',
+            'duck'
+        ));
+        
         return [
-            'title' => fake()->title(),
-            'content' => fake()->text(rand(30,50)),
+            'post_image' => fake()->imageUrl(360, 360, 'animals', true, $category),
+            'title' => fake()->text(rand(30,50)),
+            'content' => fake()->text(rand(100,450)),
             'user_id' => rand(1, 20),
         ];
     }

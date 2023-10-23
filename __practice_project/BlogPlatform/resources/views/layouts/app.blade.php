@@ -13,14 +13,24 @@
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
+    {{-- Libraries --}}
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    <style>
+        .custom-margin {
+            margin-top: 40px !important;
+        }
+    </style>
 </head>
-<body>
+<body class="position-relative">
+    <x-message2 />
+
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
+                <a class="navbar-brand" href="{{ url('/blogs') }}">
                     Bloger 'z
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
@@ -50,10 +60,13 @@
                             @endif
                         @else
                             <li class="nav-item">
-                                <a href="" class="nav-link">Blogs</a>
+                                <a href="/blogs" class="nav-link">Blogs</a>
                             </li>
                             <li class="nav-item">
-                                <a href="" class="nav-link">Post</a>
+                                <a href="/user/create" class="nav-link">Create Blog</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/user/profile" class="nav-link"><img src="" alt=""> {{ _('Profile') }}</a>
                             </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -79,9 +92,37 @@
             </div>
         </nav>
 
-        <main class="py-4">
-            @yield('content')
+        <main class="custom-margin py-4">
+            <div class="container">
+                @yield('content')
+            </div>
         </main>
     </div>
+
+    {{-- Scripts --}}
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    {{-- Custom Scripts --}}
+    {{-- <script>
+        $('#sessionSponsorLogo').on('change', function(){
+            $('#isSponsorLogoRemoved').val('0');
+            previewUpload(this);
+            $('#currentSponsorLogoDiv').show();
+        })
+        function previewUpload(that){
+            console.log(that)
+            console.log(that.getAttribute('previewImage'))
+            if (that.files && that.files[0]) {
+                var reader = new FileReader();
+    
+                reader.onload = function (e) {
+                    $('#'+that.getAttribute('previewImage')).attr('src', e.target.result);
+                }
+    
+                reader.readAsDataURL(that.files[0]);
+            }
+        }
+    </script> --}}
 </body>
 </html>
