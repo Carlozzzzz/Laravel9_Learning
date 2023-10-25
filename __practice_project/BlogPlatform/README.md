@@ -13,11 +13,15 @@
 
 ## Model | Controller | Migration | Factory | Seeders
     -- php artisan make:model Post -mfs
-    
+
     -- php artisan make:controller PostController
     -- php artisan make:controller UserController
 
     ** Make sure to update the migration files | factories | seeders
+
+### Migration -- update existing migration table
+    -- php artisan make:migration update_countryid_to_users_table --table=users
+
 
 ## Running Migraiton
     ** Make sure to create your database `blogplatform`
