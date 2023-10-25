@@ -19,11 +19,14 @@ class UserFactory extends Factory
     {
         $gender = fake()->randomElement($array = array('Male','Female'));
 
+
         return [
             'user_image' => fake()->imageUrl(360, 360, 'people', true),
+            'user_cover_image' => fake()->imageUrl(1000, 360, 'house', true),
             'name' => fake()->name($gender) ,
             'gender' => $gender,
             'email' => fake()->unique()->safeEmail(),
+            'contact_number' => '09123456789',
             'age' => rand(15, 30),
             'industry' => fake()->randomElement($array = array('Technology', 'Healthcare', 'Finance', 'Automotive', 'Education', 'Real Estate', 'Entertainment', 'Retail', 'Hospitality', 'Manufacturing')),
             'occupation' => fake()->jobTitle(),

@@ -64,4 +64,11 @@ class BlogController extends Controller
 
         return $image;
     }
+
+    public function debugTester() {
+        // try {
+        // } catch (ValidationException $e) {
+        //     dd($e->validator->errors()->toArray());
+        // }
+    }
 }

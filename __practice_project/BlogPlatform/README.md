@@ -13,6 +13,7 @@
 
 ## Model | Controller | Migration | Factory | Seeders
     -- php artisan make:model Post -mfs
+    
     -- php artisan make:controller PostController
     -- php artisan make:controller UserController
 

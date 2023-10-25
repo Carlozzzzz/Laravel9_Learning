@@ -69,9 +69,14 @@
                                 <a href="/user/profile" class="nav-link"><img src="" alt=""> {{ _('Profile') }}</a>
                             </li>
                             <li class="nav-item dropdown">
+                                @php
+                                    $userProfileImage = Auth::user()->user_image;
+                                    $userProfileImage = !($userProfileImage == "" || $userProfileImage == NULL) ?  $userProfileImage : "https://api.dicebear.com/avatar.svg";
+                                    $userProfileImage = str_contains($userProfileImage, "https") ? $userProfileImage : asset("storage/user/thumbnail/image/" . $userProfileImage);
+                                @endphp
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}
-                                    <img src="" alt="" class="img">
+                                    <img src="{{ $userProfileImage }}" alt="" class="inline-block rounded-circle object-fit-cover bg-dark" width="30px" height="30px">
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
@@ -103,13 +108,34 @@
     <script src="//unpkg.com/alpinejs" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     
+    {{-- PHP -> Modal Opener Scripts --}}
+    @if ($errors->has('user_image'))
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#updateProfileModal').modal('show');
+            });
+        </script>
+    @elseif($errors->has('user_cover_image'))
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#updateProfileCoverModal').modal('show');
+            });
+        </script>
+    @elseif($errors->has('email') || $errors->has('contact_number'))
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#updateProfileContactModal').modal('show');
+            });
+        </script>
+    @endif
+
+    {{-- Events --}}
+    <script>
+        
+    </script>
+
     {{-- Custom Scripts --}}
-    {{-- <script>
-        $('#sessionSponsorLogo').on('change', function(){
-            $('#isSponsorLogoRemoved').val('0');
-            previewUpload(this);
-            $('#currentSponsorLogoDiv').show();
-        })
+    <script>
         function previewUpload(that){
             console.log(that)
             console.log(that.getAttribute('previewImage'))
@@ -123,6 +149,6 @@
                 reader.readAsDataURL(that.files[0]);
             }
         }
-    </script> --}}
+    </script>
 </body>
 </html>

@@ -49,5 +49,7 @@ Route::group(['prefix' => 'user'], function() {
      */
     Route::controller(App\Http\Controllers\User\ProfileController::class)->group(function() {
         Route::get('/profile', 'show');
+        Route::put('/profile/update/{user}', 'update');
+        Route::put('/profile/update2/{user}', 'update_2');
     });
 });

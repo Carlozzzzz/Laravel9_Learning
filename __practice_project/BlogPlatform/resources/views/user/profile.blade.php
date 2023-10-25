@@ -3,17 +3,21 @@
 @section('content')
     <div class="row">
         <div class="col-md-4 bg-dark text-light rounded">
-            <div class="profile-content text-center pt-5 px-5 pb-2">
-                <img src="https://api.dicebear.com/avatar.svg" alt="Profile Image" class="rounded-circle">
-                <p class="mt-2"><a href="#" class="text-decoration-none fs-5">Change profile</a></p>
+            <div class="profile-content text-center pt-4 pb-3">
+                <img src="{{ $data_datarecordfile->user_image }}" alt="Profile Image" class="rounded-circle object-fit-cover" width="150px;" height="150px;">
+                {{-- Update profile modal --}}
+                <x-user.update-profile-image :imagelink="$data_datarecordfile->user_image" :id="$data_datarecordfile->id"/>
 
                 <p class="fs-4 fw-bold">{{ $data_datarecordfile->name }}</p>
             </div>
-            <div class="profile-additional bg-secondary p-5 mb-3 rounded">
+            <div class="profile-additional position-relative bg-secondary p-5 mb-3 rounded">
+                {{-- User profile contact modal --}}
+                <x-user.update-profile-contact :user="$data_datarecordfile" />
+                <button class="btn btn-gray border border-gray border-0 text-white position-absolute top-0 end-0 m-2 ps-2" data-bs-toggle="modal" data-bs-target="#updateProfileContactModal"><i class='bx bxs-pencil'></i> Edit</button>
                 <div class="contact">
                     <h5 class="fw-bold">Contact me: </h5>
                     <p class="mb-0">{{ $data_datarecordfile->email}}</p>
-                    <p class="mb-0">0913456789</p>
+                    <p class="mb-0">{{ $data_datarecordfile->contact_number}}</p>
                 </div>
                 <hr>
                 <div class="my-links">
@@ -32,10 +36,12 @@
             </div>
         </div>
         <div class="col-md-8">
-            <div class="content-cover bg-secondary position-relative" style="height:250px">
-                <img src="" alt="">
+            <div class="content-cover bg-secondary position-relative" >
+                <img src=" {{ $data_datarecordfile->user_cover_image }}" alt="" class="object-fit-cover" width="100%" style="height:250px">
                 <p class="fs-5 text-white text-muted position-absolute bottom-0 start-0 ms-2 mb-2">Background Image</p>
-                <button class="btn btn-primary position-absolute bottom-0 end-0 mb-2 me-2 ps-2"><i class='bx bxs-pencil'></i> Edit</button>
+                <!-- Button trigger modal -->
+                <button class="btn btn-primary position-absolute bottom-0 end-0 mb-2 me-2 ps-2" data-bs-toggle="modal" data-bs-target="#updateProfileCoverModal"><i class='bx bxs-pencil'></i> Edit</button>
+                <x-user.update-profile-cover-image :imagelink="$data_datarecordfile->user_cover_image" :userid="$data_datarecordfile->id"/>
             </div>
             <hr class="mb-0">
             <div class="content-header ">
@@ -51,7 +57,13 @@
             </div>
             <hr class="mt-0">
             <div class="content-body mt-5">
-                <h5 class="fw-bold">About me</h5>
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0">About me</h5>
+                    
+                    {{-- User profile contact modal --}}
+                    <x-user.update-profile-about :user="$data_datarecordfile" />
+                    <button class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#updateProfileAboutModal"><i class='bx bxs-pencil'></i> Edit</button>
+                </div>
                 <hr>
                 <table>
                     <thead>
