@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\Country;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -21,18 +22,35 @@ class ProfileController extends Controller
     {
         if(View::exists("user.profile")) {
 
-            $user = User::find(Auth::id());
+            $id = Auth::user()->id;
+
+            $user = User::find($id);
 
             $data['data_datarecordfile'] = $user;
 
+            ## Profile images ##
+            $user_image = $data['data_datarecordfile']->user_image;
+
+            $user_cover_image = $data['data_datarecordfile']->user_cover_image;
+            
             $storageSrc = "storage/user/image/";
+
             $storageCoverSrc = "storage/user/image/cover/";
 
-            $user_image = $data['data_datarecordfile']->user_image;
-            $user_cover_image = $data['data_datarecordfile']->user_cover_image;
+            $data['data_datarecordfile']->user_image = $this->imageLink($user_image, "profile", $storageSrc);
 
-            $data['data_datarecordfile']->user_image = $this->imageLink($user_image, $storageSrc);
-            $data['data_datarecordfile']->user_cover_image = $this->imageLink($user_cover_image, $storageCoverSrc);
+            $data['data_datarecordfile']->user_cover_image = $this->imageLink($user_cover_image, "cover", $storageCoverSrc);
+
+            ## User Country ##
+            $country = User::find($id)->country->name;
+
+            $data['data_datarecordfile']['country'] = $country;
+
+            ## Countries
+            $data['data_datarecordfile']['countries'] = Country::all();
+
+            ## Interests
+            $data['interests'] = $user->interests;
 
             return view("user.profile", $data);
 
@@ -85,8 +103,6 @@ class ProfileController extends Controller
                 
                 $validated['user_cover_image'] = $fileNameToStore;
 
-            } else{
-            
             }
 
             if($validated == "") {
@@ -103,9 +119,6 @@ class ProfileController extends Controller
 
     public function update_2(Request $request, User $user)
     {
-
-        // dd($request);
-
         $validated = $request->validate([
             'email' => 'required|unique:users,email,'.$user->id,
             'contact_number' => 'required|min:10'
@@ -113,8 +126,35 @@ class ProfileController extends Controller
 
         $user->update($validated);
 
-        return redirect('/user/profile')->with('message', 'Profile has been updated.');
-        
+        $message = [
+            'message' => 'Profile has been updated.',
+        ];
+
+        return redirect('/user/profile')->with($message);
+    }
+
+    public function update_3(Request $request, User $user)
+    {
+        // try {
+            $validated = $request->validate([
+                'name'          => 'required|min:3',
+                'gender'        => 'required',
+                'industry'      => 'required|min:2',
+                'occupation'    => 'required|min:2',
+                'country_id'    => 'required',
+            ]);
+
+            $user->update($validated);
+
+            $message = [
+                'message' => 'Profile has been updated.',
+            ];
+
+            return redirect('/user/profile')->with($message);
+
+        // } catch (ValidationException $e) {
+        //     dd($e->validator->errors()->toArray());
+        // }
     }
 
     public function createThumbnail($path, $width, $height) 
@@ -125,11 +165,14 @@ class ProfileController extends Controller
         $img->save($path);
     }
 
-    public function imageLink($userProfileImage = "", $folder_name = "storage/user/image/")
+    public function imageLink($image_url = "", $imageFor = "profile", $folder_name = "storage/user/image/")
     {
-        $userProfileImage =  $userProfileImage == NULL || $userProfileImage == "" ? "https://api.dicebear.com/avatar.svg" : $userProfileImage;
-        $userProfileImage = str_contains($userProfileImage, "https") ? $userProfileImage : asset($folder_name . $userProfileImage);
+        $imageFor = ($imageFor === "profile") ? "https://api.dicebear.com/avatar.svg" : asset("storage/default-img.png");
+        $image_url =  ($image_url == NULL || $image_url == "") ? $imageFor : $image_url;
+        $image_url = (str_contains($image_url, "https") || str_contains($image_url, "storage/default-img.png")) ? $image_url : asset($folder_name . $image_url);
 
-        return $userProfileImage;
+        return $image_url;
     }
+    
+    
 }

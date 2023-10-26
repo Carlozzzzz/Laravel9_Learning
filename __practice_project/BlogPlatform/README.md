@@ -22,11 +22,12 @@
 ### Migration -- update existing migration table
     -- php artisan make:migration update_countryid_to_users_table --table=users
 
-
 ## Running Migraiton
     ** Make sure to create your database `blogplatform`
     -- php artisan migrate:fresh --seed
 
+## Components
+    
 ## Package required
     Intervention
         -- composer require intervention/image

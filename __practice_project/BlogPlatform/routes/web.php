@@ -51,5 +51,6 @@ Route::group(['prefix' => 'user'], function() {
         Route::get('/profile', 'show');
         Route::put('/profile/update/{user}', 'update');
         Route::put('/profile/update2/{user}', 'update_2');
+        Route::put('/profile/update3/{user}', 'update_3');
     });
 });

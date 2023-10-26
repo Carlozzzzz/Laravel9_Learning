@@ -127,6 +127,12 @@
                 $('#updateProfileContactModal').modal('show');
             });
         </script>
+    @elseif($errors->has('gender') || $errors->has('industry') || $errors->has('occupation') || $errors->has('country'))
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $('#updateProfileAboutModal').modal('show');
+            });
+        </script>
     @endif
 
     {{-- Events --}}

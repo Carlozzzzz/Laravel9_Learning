@@ -27,6 +27,8 @@ class DatabaseSeeder extends Seeder
         $this->call(PostCategorySeeder::class);
         $this->call(CommentSeeder::class);
 
+        $this->call(InterestSeeder::class);
+
         // supposed to only apply to a single connection and reset it's self
 		// but I like to explicitly undo what I've done for clarity
 		DB::statement('SET FOREIGN_KEY_CHECKS=1;');

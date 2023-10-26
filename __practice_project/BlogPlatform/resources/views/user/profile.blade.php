@@ -37,9 +37,10 @@
         </div>
         <div class="col-md-8">
             <div class="content-cover bg-secondary position-relative" >
-                <img src=" {{ $data_datarecordfile->user_cover_image }}" alt="" class="object-fit-cover" width="100%" style="height:250px">
+                <img src=" {{ $data_datarecordfile->user_cover_image }}" alt="" class="object-fit-cover border border-gray border-opacity-50" width="100%" style="height:250px">
+                {{-- <img src="http://127.0.0.1:8000/storage/image/default-img.png" alt="" class="object-fit-cover" width="100%" style="height:250px"> --}}
                 <p class="fs-5 text-white text-muted position-absolute bottom-0 start-0 ms-2 mb-2">Background Image</p>
-                <!-- Button trigger modal -->
+                <!-- Profile Cover Modal -->
                 <button class="btn btn-primary position-absolute bottom-0 end-0 mb-2 me-2 ps-2" data-bs-toggle="modal" data-bs-target="#updateProfileCoverModal"><i class='bx bxs-pencil'></i> Edit</button>
                 <x-user.update-profile-cover-image :imagelink="$data_datarecordfile->user_cover_image" :userid="$data_datarecordfile->id"/>
             </div>
@@ -91,8 +92,12 @@
                             <td><p>{{ $data_datarecordfile->country }}</p></td>
                         </tr>
                         <tr>
-                            <td class="fw-bold"><p>Interests : </p></td>
-                            <td><p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consequuntur distinctio modi natus voluptate numquam quo similique voluptates nihil quas non.</p></td>
+                            <td class="fw-bold"><p class="mb-0">Interests : </p></td>
+                            <td>
+                                @foreach ($interests as $interest)
+                                    <span class="badge text-bg-success">{{ $interest->name }} </span>
+                                @endforeach
+                            </td>
                         </tr>
                     </tbody>
                 </table>
