@@ -5,12 +5,14 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\Country;
 use App\Models\User;
+use App\Services\ImageLinkService;
+use App\Services\ThumbnailService;
+
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Validation\ValidationException;
-use Intervention\Image\Facades\Image;
 
 class ProfileController extends Controller
 {
@@ -18,7 +20,7 @@ class ProfileController extends Controller
         $this->middleware("auth");
     }
 
-    public function show()
+    public function show(ImageLinkService $imageLinkService)
     {
         if(View::exists("user.profile")) {
 
@@ -29,17 +31,13 @@ class ProfileController extends Controller
             $data['data_datarecordfile'] = $user;
 
             ## Profile images ##
-            $user_image = $data['data_datarecordfile']->user_image;
+            $user_image = $user->user_image;
 
-            $user_cover_image = $data['data_datarecordfile']->user_cover_image;
+            $user_cover_image = $user->user_cover_image;
             
-            $storageSrc = "storage/user/image/";
+            $data['data_datarecordfile']->user_image = $imageLinkService->imageStorageLocation($user_image, "profile");
 
-            $storageCoverSrc = "storage/user/image/cover/";
-
-            $data['data_datarecordfile']->user_image = $this->imageLink($user_image, "profile", $storageSrc);
-
-            $data['data_datarecordfile']->user_cover_image = $this->imageLink($user_cover_image, "cover", $storageCoverSrc);
+            $data['data_datarecordfile']->user_cover_image = $imageLinkService->imageStorageLocation($user_cover_image, "cover");
 
             ## User Country ##
             $country = User::find($id)->country->name;
@@ -81,7 +79,7 @@ class ProfileController extends Controller
     
                 $thumbnail = "storage/user/thumbnail/image/" . $fileNameToStore;
     
-                $this->createThumbnail($thumbnail, 150, 93);
+                ThumbnailService::createThumbnail($thumbnail, 150, 93);
     
                 $validated['user_image'] = $fileNameToStore;
 
@@ -156,23 +154,4 @@ class ProfileController extends Controller
         //     dd($e->validator->errors()->toArray());
         // }
     }
-
-    public function createThumbnail($path, $width, $height) 
-    {
-        $img = Image::make($path)->resize($width, $height, function($constraint) {
-            $constraint->aspectRatio();
-        });
-        $img->save($path);
-    }
-
-    public function imageLink($image_url = "", $imageFor = "profile", $folder_name = "storage/user/image/")
-    {
-        $imageFor = ($imageFor === "profile") ? "https://api.dicebear.com/avatar.svg" : asset("storage/default-img.png");
-        $image_url =  ($image_url == NULL || $image_url == "") ? $imageFor : $image_url;
-        $image_url = (str_contains($image_url, "https") || str_contains($image_url, "storage/default-img.png")) ? $image_url : asset($folder_name . $image_url);
-
-        return $image_url;
-    }
-    
-    
 }

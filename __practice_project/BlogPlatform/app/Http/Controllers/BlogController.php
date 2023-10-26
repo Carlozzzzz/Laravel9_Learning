@@ -4,14 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Post;
+use App\Services\ImageLinkService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 
+
 class BlogController extends Controller
 {
+    private $imageLinkService;
+
     public function __construct()
     {
         $this->middleware("auth");
+        $this->imageLinkService = app(ImageLinkService::class);
     }
 
     public function index()
@@ -27,7 +32,8 @@ class BlogController extends Controller
             
                 // Handle the image src
                 foreach ($data['data_datatablefile'] as $key => $value) {
-                    $value->post_image = $this->validateImageSrc($value->post_image);
+                    $filename = $value->post_image;
+                    $value->post_image =  $this->imageLinkService->imageStorageLocation($filename, "post");
                 }
                 
             return view($page, $data);
@@ -42,9 +48,9 @@ class BlogController extends Controller
 
             $data["data_datarecordfile"] = Post::find($id);
 
-            $post_image = isset($data['data_datarecordfile']->post_image) ? $data['data_datarecordfile']->post_image : "";
+            $filename = isset($data['data_datarecordfile']->post_image) ? $data['data_datarecordfile']->post_image : "";
 
-            $post_image = $this->validateImageSrc($post_image);
+            $post_image = $this->imageLinkService->imageStorageLocation($filename, "post");
 
             $data['data_datarecordfile']->post_image = $post_image;
             
@@ -52,23 +58,4 @@ class BlogController extends Controller
         } return abort(404);
     }
 
-    public function validateImageSrc($image)
-    {
-        if(isset($image)) {
-            if (! str_contains($image, "http")) {
-                $image = asset("storage/post/" . $image);
-            }
-        } else {
-            $image = "https://api.dicebear.com/avatar.svg";
-        }
-
-        return $image;
-    }
-
-    public function debugTester() {
-        // try {
-        // } catch (ValidationException $e) {
-        //     dd($e->validator->errors()->toArray());
-        // }
-    }
 }

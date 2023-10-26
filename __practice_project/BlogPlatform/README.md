@@ -3,13 +3,16 @@
     -- laravel new sample_with_boostrap
     -- cd sample_with_boostrap
 
+
 ## Boostrap
     -- composer require twbs/bootstrap:5.3.2
     -- composer require laravel/ui
 
+
 ## Using boostrap
     -- php artisan ui bootstrap --auth
     -- npm install
+
 
 ## Model | Controller | Migration | Factory | Seeders
     -- php artisan make:model Post -mfs
@@ -19,15 +22,20 @@
 
     ** Make sure to update the migration files | factories | seeders
 
+
 ### Migration -- update existing migration table
     -- php artisan make:migration update_countryid_to_users_table --table=users
+
 
 ## Running Migraiton
     ** Make sure to create your database `blogplatform`
     -- php artisan migrate:fresh --seed
 
+
 ## Components
-    
+    -- php artisan make:component postcard  --view
+
+
 ## Package required
     Intervention
         -- composer require intervention/image

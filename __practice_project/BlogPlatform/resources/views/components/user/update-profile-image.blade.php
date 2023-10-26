@@ -40,7 +40,7 @@
 </div>
 
 <script>
-     let userProfileImage = document.getElementById("userProfileImage");
+    let userProfileImage = document.getElementById("userProfileImage");
 
     userProfileImage.addEventListener('change', function() {
         previewUpload(this);

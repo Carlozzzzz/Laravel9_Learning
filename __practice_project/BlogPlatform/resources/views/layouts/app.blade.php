@@ -20,15 +20,15 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <style>
         .custom-margin {
-            margin-top: 40px !important;
+            margin-top: 78px !important;   
         }
     </style>
 </head>
-<body class="position-relative">
-    <x-message2 />
+<body>
+    <x-message />
 
-    <div id="app">
-        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark shadow-sm">
+    <div class="position-relative" id="app">
+        <nav class=" navbar navbar-expand-md navbar-dark fixed-top bg-dark shadow-sm p-3">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/blogs') }}">
                     Bloger 'z
@@ -63,7 +63,10 @@
                                 <a href="/blogs" class="nav-link">Blogs</a>
                             </li>
                             <li class="nav-item">
-                                <a href="/user/create" class="nav-link">Create Blog</a>
+                                <a href="/user/create" class="nav-link">Create Post</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/user/posts" class="nav-link">My Blog</a>
                             </li>
                             <li class="nav-item">
                                 <a href="/user/profile" class="nav-link"><img src="" alt=""> {{ _('Profile') }}</a>
@@ -97,7 +100,7 @@
             </div>
         </nav>
 
-        <main class="custom-margin py-4">
+        <main class="custom-margin">
             <div class="container">
                 @yield('content')
             </div>
