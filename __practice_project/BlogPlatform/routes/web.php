@@ -29,6 +29,7 @@ Route::controller(App\Http\Controllers\BlogController::class)->group(function() 
     Route::get('/', 'index');
     Route::get('/blogs', 'index');
     Route::get('/post/{id}', 'show');
+    Route::post('load-data', 'loadMoreData')->name('load-data');
 
 });
 
@@ -42,6 +43,8 @@ Route::group(['prefix' => 'user'], function() {
         Route::get('/create', 'create');
         Route::get('/post/{id}', 'show');
         Route::post('/store', 'store');
+        Route::post('/load-data', 'loadMoreData')->name('/user/load-data');
+
     });
 
     /**

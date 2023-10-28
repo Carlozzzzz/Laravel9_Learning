@@ -71,17 +71,17 @@ class ProfileController extends Controller
     
                 $extension = $request->file('user_image')->getClientOriginalExtension();
     
-                $fileNameToStore = $filename  . '_' . time() . '.' . $extension;
+                $filenameToStore = $filename  . '_' . time() . '.' . $extension;
     
-                $request->file('user_image')->storeAs('public/user/image', $fileNameToStore);
+                $request->file('user_image')->storeAs('public/user/image', $filenameToStore);
                 
-                $request->file('user_image')->storeAs('public/user/thumbnail/image', $fileNameToStore);
+                $request->file('user_image')->storeAs('public/user/image/thumbnail', $filenameToStore);
     
-                $thumbnail = "storage/user/thumbnail/image/" . $fileNameToStore;
+                $thumbnail = "storage/user/image/thumbnail/" . $filenameToStore;
     
                 ThumbnailService::createThumbnail($thumbnail, 150, 93);
     
-                $validated['user_image'] = $fileNameToStore;
+                $validated['user_image'] = $filenameToStore;
 
             }
             else if ($request->has('user_cover_image')) {
@@ -95,11 +95,11 @@ class ProfileController extends Controller
     
                 $extension = $request->file('user_cover_image')->getClientOriginalExtension();
     
-                $fileNameToStore = $filename  . '_' . time() . '.' . $extension;
+                $filenameToStore = $filename  . '_' . time() . '.' . $extension;
     
-                $request->file('user_cover_image')->storeAs('public/user/image/cover/', $fileNameToStore);
+                $request->file('user_cover_image')->storeAs('public/user/image/cover/', $filenameToStore);
                 
-                $validated['user_cover_image'] = $fileNameToStore;
+                $validated['user_cover_image'] = $filenameToStore;
 
             }
 

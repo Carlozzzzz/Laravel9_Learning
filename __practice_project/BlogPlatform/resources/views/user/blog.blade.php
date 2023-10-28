@@ -6,6 +6,7 @@
         width: 150px;
     }
 </style>
+
 <section>
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
         <ol class="breadcrumb">
@@ -27,3 +28,5 @@
     </div>
 </section>
 @endsection
+
+

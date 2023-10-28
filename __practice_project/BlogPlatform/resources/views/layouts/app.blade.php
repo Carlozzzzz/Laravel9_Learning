@@ -75,7 +75,7 @@
                                 @php
                                     $userProfileImage = Auth::user()->user_image;
                                     $userProfileImage = !($userProfileImage == "" || $userProfileImage == NULL) ?  $userProfileImage : "https://api.dicebear.com/avatar.svg";
-                                    $userProfileImage = str_contains($userProfileImage, "https") ? $userProfileImage : asset("storage/user/thumbnail/image/" . $userProfileImage);
+                                    $userProfileImage = str_contains($userProfileImage, "https") ? $userProfileImage : asset("storage/user/image/thumbnail/" . $userProfileImage);
                                 @endphp
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}
@@ -138,11 +138,6 @@
         </script>
     @endif
 
-    {{-- Events --}}
-    <script>
-        
-    </script>
-
     {{-- Custom Scripts --}}
     <script>
         function previewUpload(that){
@@ -158,6 +153,10 @@
                 reader.readAsDataURL(that.files[0]);
             }
         }
+
     </script>
+
+    @yield('script')
+
 </body>
 </html>

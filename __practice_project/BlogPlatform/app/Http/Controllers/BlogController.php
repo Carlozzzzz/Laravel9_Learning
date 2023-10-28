@@ -21,14 +21,15 @@ class BlogController extends Controller
 
     public function index()
     {
-        $page = "blog.index";
+        $page = "blog.blog";
 
         if(View::exists($page)) {
-            $data['data_datatablefile'] = Post::orderBy('created_at')->get();
-
-                $data['data_datatablefile'] = DB::table('posts')
+            
+            $data['data_datatablefile'] = DB::table('posts')
                     ->orderBy('created_at', 'desc')
-                    ->simplePaginate(10);
+                    ->paginate(10);
+
+            // $data['data_datatablefile'] = Post::orderBy('created_at')->simplepaginate(5);
             
                 // Handle the image src
                 foreach ($data['data_datatablefile'] as $key => $value) {
@@ -38,6 +39,55 @@ class BlogController extends Controller
                 
             return view($page, $data);
         } return abort(404);
+    }
+
+    public function loadMoreData(Request $request)
+    {
+        if ($request->id > 0) {
+            $data = Post::where('id','<',$request->id)
+                    ->orderBy('id','DESC')
+                    ->limit(10)
+                    ->get();
+        } else {
+            $data = Post::limit(10)->orderBy('id', 'DESC')->get();
+        }
+
+            $output = '';
+            $button = '';
+            $last_id = '';
+
+            if (!$data->isEmpty()) {
+                foreach ($data as $row) {
+                    $output .= '
+                        <div class="col-12 col-md-6 d-flex flex-column justify-content-between">
+                            <div class="cust-header">
+                                <img src='. $row->post_image . ' class="card-img-top object-fit-cover" alt="..." height="250px">
+                                
+                                <div class="cust-body mb-3">
+                                    <h5 class="fw-bold mt-3">'. $row->title .'</h5>
+                                </div>
+                            </div>
+                            <div class="cust-footer">
+                                <a href="/post/'.$row->id.'" class="fs-5">View post</a>
+                            </div>
+                        </div>
+                    ';
+                    $last_id = $row->id ;
+                }
+
+                $button = '
+                        <button type="button" name="load_more_button" class="btn btn-primary m-4 w-50" data-id="' . $last_id . '" id="load_more_button">Load More</button>
+                    ';
+            } else {
+                $button = '
+                        <button type="button" name="load_more_button" class="btn btn-info m-4 w-50">No Data Found</button>
+                    ';
+            }
+        $xpostdata = array();
+
+        $xpostdata['output'] = $output;
+        $xpostdata['loadButton'] = $button;
+        return $xpostdata;
     }
 
     public function show($id) 

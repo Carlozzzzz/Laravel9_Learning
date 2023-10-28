@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Post;
 use App\Models\User;
 use App\Services\ImageLinkService;
+use App\Services\ThumbnailService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
@@ -23,7 +24,7 @@ class PostController extends Controller
     public function index()
     {
         // user blogs
-        $page = 'user.blogs';
+        $page = 'user.blog';
 
         if(View::exists($page)) {
             
@@ -40,6 +41,60 @@ class PostController extends Controller
             return view($page, $data);
         }
     }
+
+    public function loadMoreData(Request $request)
+    {
+        if ($request->id > 0) {
+            $data =  User::find(Auth::id())->posts()
+                        ->where('id','<',$request->id)
+                        ->orderBy('id','DESC')
+                        ->limit(10)
+                        ->get();
+        } else {
+            $data = User::find(Auth::id())->posts()
+                        ->limit(10)
+                        ->orderBy('id', 'DESC')
+                        ->get();
+        }
+
+            $output = '';
+            $button = '';
+            $last_id = '';
+
+            if (!$data->isEmpty()) {
+                foreach ($data as $row) {
+                    $output .= '
+                        <div class="col-12 col-md-6 d-flex flex-column justify-content-between">
+                            <div class="cust-header">
+                                <img src='. $row->post_image . ' class="card-img-top object-fit-cover" alt="..." height="250px">
+                                
+                                <div class="cust-body mb-3">
+                                    <h5 class="fw-bold mt-3">'. $row->title .'</h5>
+                                </div>
+                            </div>
+                            <div class="cust-footer">
+                                <a href="/post/'.$row->id.'" class="fs-5">View post</a>
+                            </div>
+                        </div>
+                    ';
+                    $last_id = $row->id ;
+                }
+
+                $button = '
+                        <button type="button" name="load_more_button" class="btn btn-primary m-4 w-50" data-id="' . $last_id . '" id="load_more_button">Load More</button>
+                    ';
+            } else {
+                $button = '
+                        <button type="button" name="load_more_button" class="btn btn-info m-4 w-50">No Data Found</button>
+                    ';
+            }
+        $xpostdata = array();
+
+        $xpostdata['output'] = $output;
+        $xpostdata['loadButton'] = $button;
+        return $xpostdata;
+    }
+
 
     public function show($id) {
         $page = "user.post";
@@ -86,10 +141,16 @@ class PostController extends Controller
         
                 $extension = $request->file('post_image')->getClientOriginalExtension();
         
-                $filenameToStore = $filename . '_' . time() . '_' . $extension;
+                $filenameToStore = $filename . '_' . time() . '.' . $extension;
         
-                $request->file('post_image')->storeAs('public/post/', $filenameToStore);
-        
+                $request->file('post_image')->storeAs('public/post/image/', $filenameToStore);
+
+                $request->file('post_image')->storeAs('public/post/image/thumbnail/', $filenameToStore);
+
+                $thumbnail = "storage/post/image/thumbnail/" . $filenameToStore;
+
+                ThumbnailService::createThumbnail($thumbnail, 600, 200);
+
                 $validated['post_image'] = $filenameToStore;
             }
 

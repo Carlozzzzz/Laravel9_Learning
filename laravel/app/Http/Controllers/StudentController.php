@@ -39,7 +39,7 @@ class StudentController extends Controller
             "email" => ['required', 'email', Rule::unique('students', 'email')],
         ]);
 
-       Students::create($validated);
+        Students::create($validated);
 
         return redirect('/')->with('message', 'Student added successfully');
     }
