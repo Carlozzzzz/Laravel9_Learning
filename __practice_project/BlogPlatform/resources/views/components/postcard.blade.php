@@ -1,40 +1,33 @@
 @props(['data'])
-
-{{-- <div class="container overflow-hidden">
-    <div class="row g-3">
-        @foreach ($data as $data)
-        
-        <div class="col-12 col-md-6 d-flex flex-column justify-content-between">
-            <div class="cust-header">
-                <img src="{{ $data->post_image}}" class="card-img-top object-fit-cover" alt="..." height="250px">
-                
-                <div class="cust-body mb-3">
-                    <h5 class="fw-bold mt-3">{{ $data->title }}</h5>
-                </div>
-            </div>
-            <div class="cust-footer">
-                <a href="/user/post/{{ $data->id }}" class="fs-5">View post</a>
-            </div>
-        </div>
-
-        @endforeach
-    </div>
-</div> --}}
+@props(['lastid'])
 
 <div class="container overflow-hidden">
     <div class="row g-3" id="dataContainer">
         @foreach ($data as $row)
         
-        <div class="col-12 col-md-6 d-flex flex-column justify-content-between">
-            <div class="cust-header">
-                <img src="{{ $row->post_image}}" class="card-img-top object-fit-cover" alt="..." height="250px">
-                
-                <div class="cust-body mb-3">
-                    <h5 class="fw-bold mt-3">{{ $row->title }}</h5>
+        <div class="col-md-6 col-lg-12 d-flex align-items-stretch">
+            <div class="card flex-lg-row position-relative w-100">
+                <img src="{{ $row->post_image }}" class="blog-image object-fit-cover " alt="...">
+                <div class="blog-body flex-fill d-flex flex-column justify-content-between  p-2">
+                    <div class="story mt-1">
+                        <h5 class="fw-bold fs-4 ">{{ $row->title }}</h5>
+                        <p class="">{{ $row->content }}</p>
+                    </div>
+                    <a href="/post/{{ $row->id }}" class="text-decoration-none">
+                        <div class="cust-footer d-flex flex-column ">
+                            <div class="details">
+                                <div class="blog-creator d-flex align-items-center">
+                                    <img src="{{ $row->user->user_image }}" class="rounded-circle border border-2 border-secondary border-opacity-25" alt="" width="25px" height="25px">
+                                    <h5 class="fs-6 fw-bold text-muted mb-0 ms-1"> {{ $row->user->name}}</h5>
+                                </div>
+                            </div>
+                            <div class="mt-1">
+                                <span class="text-muted"><i class='bx bx-calendar'></i> {{ $row->date_joined }}</span>
+                                <span class="text-muted ms-2"><i class='bx bx-message-rounded'></i></span> 09 Comments</span>
+                            </div>
+                        </div>
+                    </a>
                 </div>
-            </div>
-            <div class="cust-footer">
-                <a href="/post/{{ $row->id }}" class="fs-5">View post</a>
             </div>
         </div>
 
@@ -43,7 +36,7 @@
     </div>
     <div class="row">
         <div class="col-md-12 text-center" id="loadButtonCol">
-            <div class="btn btn-primary m-4 w-50" id="load_more_button">See More</div>
+            <button class="btn btn-primary m-4 w-50" data-id="{{ $lastid }}" id="load_more_button">See More</button>
         </div>
     </div>
 </div>

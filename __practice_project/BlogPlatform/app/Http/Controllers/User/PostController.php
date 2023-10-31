@@ -10,6 +10,8 @@ use App\Services\ThumbnailService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Str;
+
 
 class PostController extends Controller
 {
@@ -30,13 +32,20 @@ class PostController extends Controller
             
             $data['data_datatablefile'] = User::find(Auth::id())->posts()
                         ->orderBy('created_at','desc')
+                        ->orderBy('id','desc')
+                        ->limit(3)
                         ->get();
 
-            foreach ($data['data_datatablefile'] as $key => $value) {
-                $filename = $value->post_image;
-                
-                $value->post_image = $this->imageLinkService->imageStorageLocation($filename, "post");
-            }
+
+            $data['data_datatablefile'] = $this->formatPostObj($data['data_datatablefile']);
+
+            $index = count($data['data_datatablefile']) -1;
+
+            // $this->foreachDisplay($data['data_datatablefile']);
+
+            $last_id = $data['data_datatablefile'][($index)]->id;
+
+            $data['last_id'] = $last_id;
 
             return view($page, $data);
         }
@@ -47,13 +56,15 @@ class PostController extends Controller
         if ($request->id > 0) {
             $data =  User::find(Auth::id())->posts()
                         ->where('id','<',$request->id)
+                        ->orderBy('created_at','desc')
                         ->orderBy('id','DESC')
-                        ->limit(10)
+                        ->limit(5)
                         ->get();
         } else {
             $data = User::find(Auth::id())->posts()
-                        ->limit(10)
+                        ->orderBy('created_at','desc')
                         ->orderBy('id', 'DESC')
+                        ->limit(5)
                         ->get();
         }
 
@@ -62,18 +73,49 @@ class PostController extends Controller
             $last_id = '';
 
             if (!$data->isEmpty()) {
+
+                $data = $this->formatPostObj($data);
+
                 foreach ($data as $row) {
-                    $output .= '
-                        <div class="col-12 col-md-6 d-flex flex-column justify-content-between">
-                            <div class="cust-header">
-                                <img src='. $row->post_image . ' class="card-img-top object-fit-cover" alt="..." height="250px">
+                    // $output .= '
+                    //     <div class="col-12 col-md-6 d-flex flex-column justify-content-between">
+                    //         <div class="cust-header">
+                    //             <img src='. $row->post_image . ' class="card-img-top object-fit-cover" alt="..." height="250px">
                                 
-                                <div class="cust-body mb-3">
-                                    <h5 class="fw-bold mt-3">'. $row->title .'</h5>
+                    //             <div class="cust-body mb-3">
+                    //                 <h5 class="fw-bold mt-3">'. $row->title .'</h5>
+                    //             </div>
+                    //         </div>
+                    //         <div class="cust-footer">
+                    //             <a href="/post/'.$row->id.'" class="fs-5">View post</a>
+                    //         </div>
+                    //     </div>
+                    // ';
+
+                    $output .= '
+                        <div class="col-md-6 col-lg-12 d-flex align-items-stretch">
+                            <div class="card flex-lg-row position-relative w-100">
+                                <img src="'.$row->post_image.'" class="blog-image object-fit-cover " alt="...">
+                                <div class="blog-body flex-fill d-flex flex-column justify-content-between  p-2">
+                                    <div class="story mt-1">
+                                        <h5 class="fw-bold fs-4 ">'.$row->title.'</h5>
+                                        <p class="">'.$row->content.'</p>
+                                    </div>
+                                    <a href="/post/{{ $row->id }}" class="text-decoration-none">
+                                        <div class="cust-footer d-flex flex-column ">
+                                            <div class="details">
+                                                <div class="blog-creator d-flex align-items-center">
+                                                    <img src="'.$row->user->user_image.'" class="rounded-circle border border-2 border-secondary border-opacity-25" alt="" width="25px" height="25px">
+                                                    <h5 class="fs-6 fw-bold text-muted mb-0 ms-1"> '.$row->user->name.'</h5>
+                                                </div>
+                                            </div>
+                                            <div class="mt-1">
+                                                <span class="text-muted"><i class="bx bx-calendar"></i> '.$row->date_joined.'</span>
+                                                <span class="text-muted ms-2"><i class="bx bx-message-rounded"></i></span> 09 Comments</span>
+                                            </div>
+                                        </div>
+                                    </a>
                                 </div>
-                            </div>
-                            <div class="cust-footer">
-                                <a href="/post/'.$row->id.'" class="fs-5">View post</a>
                             </div>
                         </div>
                     ';
@@ -164,5 +206,35 @@ class PostController extends Controller
         //     // If validation fails, dump the validation errors
         //     dd($e->errors());
         // }
+    }
+    
+    function formatPostObj($row) {
+
+
+        foreach ($row as $key => $value) {
+            $filename = $value->post_image;
+            $value->content = Str::limit($value->content, 100);
+
+            $dateJoined = \Carbon\Carbon::parse($value->created_at)->format('F Y');
+            $value->date_joined = $dateJoined; 
+            $value->post_image =  $this->imageLinkService->imageStorageLocation($filename, "post");
+
+            // Profile image thumbnail
+            $filename = $value->user->user_image;
+            $value->user->user_image = $this->imageLinkService->imageStorageLocation($filename, "profile", true);
+
+
+        }
+
+
+        return $row;
+    }
+
+    function foreachDisplay($data) {
+        foreach($data as $row) {
+            echo $row->id."<br>";
+        }
+
+        die();
     }
 }

@@ -19,14 +19,15 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+// Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 
 Route::controller(App\Http\Controllers\BlogController::class)->group(function() {
     /**
      * 
      */
-    Route::get('/', 'index');
+    Route::get('/', 'index')->name('home');
+    Route::get('/home', 'index');
     Route::get('/blogs', 'index');
     Route::get('/post/{id}', 'show');
     Route::post('load-data', 'loadMoreData')->name('load-data');

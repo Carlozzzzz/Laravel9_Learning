@@ -22,7 +22,7 @@
             </div>
             
             {{-- Posts component --}}
-            <x-postcard :data="$data_datatablefile"/>
+            <x-postcard :data="$data_datatablefile" :lastid="$last_id"/>
            
         </div>
     </div>

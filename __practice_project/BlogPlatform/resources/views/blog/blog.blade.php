@@ -11,11 +11,10 @@
         
         <div class="col-12 col-lg-8 p-0">
             <div class="px-2">
-                <h3 class="mt-4">Blogs</h3>
-                <hr class="px-2">
+                <h3 class="m-5 fs-2 fw-bold text-center">Blogs</h3>
             </div>
             {{-- Posts component --}}
-            <x-blog-postcard :data="$data_datatablefile"/>
+            <x-blog-postcard :data="$data_datatablefile" :lastid="$last_id"/>
         </div>
     </div>
 </section>
