@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ProfileImageCoverRequest;
+use App\Http\Requests\ProfileImageRequest;
 use App\Models\Country;
 use App\Models\User;
 use App\Services\ImageLinkService;
+use App\Services\StoreImageService;
 use App\Services\ThumbnailService;
 
 use Carbon\Carbon;
@@ -55,51 +58,22 @@ class ProfileController extends Controller
         } return abort(404);
     }
 
-    public function update(Request $request, User $user)
+    public function update(ProfileImageRequest $request, User $user)
     {
         // try {
             $validated = "";
 
             if($request->has('user_image')) {
-                $validated = $request->validate([
-                    "user_image" => "required|mimes:jpeg,jpg,png,bmp,tiff||max:4096"
-                ]);
-    
-                $fileExtension = $request->file('user_image');
-    
-                $filename = pathinfo($fileExtension, PATHINFO_FILENAME);
-    
-                $extension = $request->file('user_image')->getClientOriginalExtension();
-    
-                $filenameToStore = $filename  . '_' . time() . '.' . $extension;
-    
-                $request->file('user_image')->storeAs('public/user/image', $filenameToStore);
-                
-                $request->file('user_image')->storeAs('public/user/image/thumbnail', $filenameToStore);
-    
-                $thumbnail = "storage/user/image/thumbnail/" . $filenameToStore;
-    
-                ThumbnailService::createThumbnail($thumbnail, 150, 93);
-    
-                $validated['user_image'] = $filenameToStore;
 
-            }
-            else if ($request->has('user_cover_image')) {
-                $validated = $request->validate([
-                    "user_cover_image" => "required|mimes:jpeg,jpg,png,bmp,tiff||max:4096"
-                ]);
+                $validated = $request->validated();
     
-                $fileExtension = $request->file('user_cover_image');
-    
-                $filename = pathinfo($fileExtension, PATHINFO_FILENAME);
-    
-                $extension = $request->file('user_cover_image')->getClientOriginalExtension();
-    
-                $filenameToStore = $filename  . '_' . time() . '.' . $extension;
-    
-                $request->file('user_cover_image')->storeAs('public/user/image/cover/', $filenameToStore);
-                
-                $validated['user_cover_image'] = $filenameToStore;
+                $requestFile = $request->file('user_image');
+
+                $validated['user_image'] = StoreImageService::saveImageTo($requestFile, 'user/image', true);
+
+                $user->update($validated);
+
+                return redirect('/user/profile')->with("message", "Profile has been updated.");
 
             }
 
@@ -107,12 +81,31 @@ class ProfileController extends Controller
                 return redirect('/user/profile')->with("message", "No changes made.");
             }
 
-            $user->update($validated);
-
-            return redirect('/user/profile')->with("message", "Profile has been updated.");
         // } catch (ValidationException $e) {
         //     dd($e->validator->errors()->toArray());
         // }
+    }
+
+    public function update_1(ProfileImageCoverRequest $request, User $user)
+    {
+        $validated = "";
+
+        if ($request->has('user_cover_image')) {
+
+            $validated = $request->validated();
+
+            $requestFile = $request->file('user_cover_image');
+
+            $validated['user_cover_image'] = StoreImageService::saveImageTo($requestFile, 'user/image/cover', true);
+
+            $user->update($validated);
+
+            return redirect('/user/profile')->with("message", "Profile has been updated.");
+        }
+
+        if($validated == "") {
+            return redirect('/user/profile')->with("message", "No changes made.");
+        }
     }
 
     public function update_2(Request $request, User $user)
@@ -154,4 +147,5 @@ class ProfileController extends Controller
         //     dd($e->validator->errors()->toArray());
         // }
     }
+
 }

@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PostImageRequest;
+use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
 use App\Models\User;
 use App\Services\ImageLinkService;
+use App\Services\StoreImageService;
 use App\Services\ThumbnailService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,7 +29,6 @@ class PostController extends Controller
 
     public function index()
     {
-        // user blogs
         $page = 'user.blog';
 
         if(View::exists($page)) {
@@ -36,16 +39,13 @@ class PostController extends Controller
                         ->limit(3)
                         ->get();
 
-
             $data['data_datatablefile'] = $this->formatPostObj($data['data_datatablefile']);
 
-            $index = count($data['data_datatablefile']) -1;
+            $lastIndex = count($data['data_datatablefile']) -1;
 
-            // $this->foreachDisplay($data['data_datatablefile']);
+            $lastId = $data['data_datatablefile'][($lastIndex)]->id;
 
-            $last_id = $data['data_datatablefile'][($index)]->id;
-
-            $data['last_id'] = $last_id;
+            $data['last_id'] = $lastId;
 
             return view($page, $data);
         }
@@ -77,24 +77,18 @@ class PostController extends Controller
                 $data = $this->formatPostObj($data);
 
                 foreach ($data as $row) {
-                    // $output .= '
-                    //     <div class="col-12 col-md-6 d-flex flex-column justify-content-between">
-                    //         <div class="cust-header">
-                    //             <img src='. $row->post_image . ' class="card-img-top object-fit-cover" alt="..." height="250px">
-                                
-                    //             <div class="cust-body mb-3">
-                    //                 <h5 class="fw-bold mt-3">'. $row->title .'</h5>
-                    //             </div>
-                    //         </div>
-                    //         <div class="cust-footer">
-                    //             <a href="/post/'.$row->id.'" class="fs-5">View post</a>
-                    //         </div>
-                    //     </div>
-                    // ';
-
+                    
                     $output .= '
                         <div class="col-md-6 col-lg-12 d-flex align-items-stretch">
                             <div class="card flex-lg-row position-relative w-100">
+                                <div class="position-absolute d-flex top-0 end-0 p-2">
+                                    <form class="me-1" action="'.url('user/post/delete/'.$row->id.'').'" method="POST">
+                                        @method("delete")
+                                        @csrf
+                                        <button type="submit" class="btn btn-danger border-0 text-decoration-underline"><i class="bx bxs-trash"></i></button>
+                                    </form>
+                                    <a href="'.url('user/post/edit/'.$row->id.'').'" class="btn btn-secondary  border-0 text-decoration-underline ps-2"><i class="bx bxs-pencil"></i></a>
+                                </div>
                                 <img src="'.$row->post_image.'" class="blog-image object-fit-cover " alt="...">
                                 <div class="blog-body flex-fill d-flex flex-column justify-content-between  p-2">
                                     <div class="story mt-1">
@@ -137,8 +131,8 @@ class PostController extends Controller
         return $xpostdata;
     }
 
-
-    public function show($id) {
+    public function show($id)
+    {
         $page = "user.post";
 
         if(View::exists($page)) {
@@ -147,11 +141,14 @@ class PostController extends Controller
 
             $filename = isset($data['data_datarecordfile']->post_image) ? $data['data_datarecordfile']->post_image : "";
 
-            $post_image = $this->imageLinkService->imageStorageLocation($filename, "post");
+            $imageUsage = "post";
+
+            $post_image = $this->imageLinkService->imageStorageLocation($filename, $imageUsage);
 
             $data['data_datarecordfile']->post_image = $post_image;
             
             return view($page, $data);
+
         } return abort(404);
     }
 
@@ -165,76 +162,95 @@ class PostController extends Controller
         } return abort(404);
     }
 
-    public function store(Request $request) {
-        // try {
-            $validated = $request->validate([
-                "title" => "required|min:3",
-                "content" => "required|min:3"
-            ]);
-  
-            if ($request->hasFile("post_image")) {
-                $request->validate([
-                    "post_image" => "mimes:jpeg,png,bmp,tiff|max:4096",
-                ]);
-        
-                $fileNameWithExtension = $request->file('post_image');
-        
-                $filename = pathinfo($fileNameWithExtension, PATHINFO_FILENAME);
-        
-                $extension = $request->file('post_image')->getClientOriginalExtension();
-        
-                $filenameToStore = $filename . '_' . time() . '.' . $extension;
-        
-                $request->file('post_image')->storeAs('public/post/image/', $filenameToStore);
+    public function store(StorePostRequest  $request, PostImageRequest $imageRequest)
+    {
+        $validated = $request->validated();
 
-                $request->file('post_image')->storeAs('public/post/image/thumbnail/', $filenameToStore);
+        if ($imageRequest->hasFile("post_image")){
 
-                $thumbnail = "storage/post/image/thumbnail/" . $filenameToStore;
-
-                ThumbnailService::createThumbnail($thumbnail, 600, 200);
-
-                $validated['post_image'] = $filenameToStore;
-            }
-
-            $user = User::find(Auth::id());
-
-            $user->posts()->createQuietly($validated);
-
-            return redirect('/blogs')->with('message','Post has been publish');
-
-        // } catch (\Illuminate\Validation\ValidationException $e) {
-        //     // If validation fails, dump the validation errors
-        //     dd($e->errors());
-        // }
-    }
+            $imageRequest->validated();
     
-    function formatPostObj($row) {
+            $requestFile = $imageRequest->file('post_image');
 
-
-        foreach ($row as $key => $value) {
-            $filename = $value->post_image;
-            $value->content = Str::limit($value->content, 100);
-
-            $dateJoined = \Carbon\Carbon::parse($value->created_at)->format('F Y');
-            $value->date_joined = $dateJoined; 
-            $value->post_image =  $this->imageLinkService->imageStorageLocation($filename, "post");
-
-            // Profile image thumbnail
-            $filename = $value->user->user_image;
-            $value->user->user_image = $this->imageLinkService->imageStorageLocation($filename, "profile", true);
-
-
+            $validated['post_image'] = StoreImageService::saveImageTo($requestFile, "post/image", true, 600, 200);
         }
 
+        $user = User::find(Auth::id());
 
+        $user->posts()->createQuietly($validated);
+
+        return redirect('/blogs')->with('message','Post has been publish');
+    }
+
+    public function edit($id)
+    {
+        $page = "user.edit";
+        if(View::exists($page)) {
+
+            $data['data_datarecordfile'] = Post::findOrFail($id);
+
+            $filename = isset($data['data_datarecordfile']->post_image) ? $data['data_datarecordfile']->post_image : "";
+
+            $post_image = $this->imageLinkService->imageStorageLocation($filename, "post");
+
+            $data['data_datarecordfile']->post_image = $post_image;
+
+            return view($page, $data);
+        } return abort(404);
+    }
+
+    public function update(Post $post, StorePostRequest  $request, PostImageRequest $imageRequest)
+    {
+
+        $validated = $request->validated();
+
+        if ($imageRequest->hasFile("post_image")){
+
+            $imageRequest->validated();
+    
+            $requestFile = $imageRequest->file('post_image');
+
+            $validated['post_image'] = StoreImageService::saveImageTo($requestFile, "post/image", true, 600, 200);
+        }
+
+        $post->updateQuietly($validated);
+
+        return redirect('user/posts')->with(['message' => 'Post has been updated.']);
+
+    }
+
+    function destroy(Post $post)
+    {
+        $post->delete();
+
+        return redirect('user/posts')->with(['message' => 'Post has been deleted.']);
+    }
+    
+    function formatPostObj($row)
+    {
+        foreach ($row as $key => $value) {
+            $value->content = Str::limit($value->content, 100);
+            
+            $value->date_joined = $this->formatDate($value->created_at);
+
+            $filename = $value->post_image;
+            $value->post_image =  $this->imageLinkService->imageStorageLocation($filename, "post");
+
+            $filename = $value->user->user_image;
+            $value->user->user_image = $this->imageLinkService->imageStorageLocation($filename, "profile", true);
+        }
         return $row;
     }
 
-    function foreachDisplay($data) {
+    function formatDate($date) {
+        return \Carbon\Carbon::parse($date)->format('F Y');
+    }
+
+    function foreachDisplay($data)
+    {
         foreach($data as $row) {
             echo $row->id."<br>";
         }
-
         die();
     }
 }

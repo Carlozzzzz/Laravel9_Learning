@@ -6,7 +6,7 @@
     <div class="modal fade" id="updateProfileCoverModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="updateProfileCoverModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form action="/user/profile/update/{{ $userid }}" method="POST" enctype="multipart/form-data">
+                <form action="/user/profile/update1/{{ $userid }}" method="POST" enctype="multipart/form-data">
                     @method('PUT')
                     @csrf
                     <div class="modal-header">

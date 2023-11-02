@@ -94,7 +94,7 @@
                                     <a href="/blogs" class="nav-link fs-5 py-2 py-md-3">Blogs</a>
                                 </li>
                                 <li class="nav-item ">
-                                    <a href="/user/create" class="nav-link fs-5 py-2 py-md-3">Create Post</a>
+                                    <a href="/user/post/create" class="nav-link fs-5 py-2 py-md-3">Create Post</a>
                                 </li>
                                 <li class="nav-item ">
                                     <a href="/user/posts" class="nav-link fs-5 py-2 py-md-3">My Blog</a>

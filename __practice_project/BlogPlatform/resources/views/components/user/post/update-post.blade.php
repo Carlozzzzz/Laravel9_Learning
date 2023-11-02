@@ -7,16 +7,11 @@
         
         <div class="col-md-6 col-lg-12 d-flex align-items-stretch">
             <div class="card flex-lg-row position-relative w-100">
-
-                <div class="position-absolute d-flex top-0 end-0 p-2">
-                    <form class="me-1" action="{{ url('user/post/delete/'.$row->id.'') }}" method="POST">
-                        @method('delete')
-                        @csrf
-                        <button type="submit" class="btn btn-danger border-0 text-decoration-underline"><i class='bx bxs-trash'></i></button>
-                    </form>
-                    <a href="{{ url('user/post/edit/'.$row->id.'') }}" class="btn btn-secondary  border-0 text-decoration-underline ps-2"><i class='bx bxs-pencil'></i></a>
-                </div>
-                
+                <form action="user/post/update/{{ $row->id }}" method="POST">
+                    @method('PUT')
+                    @csrf
+                    <button type="submit" class="btn btn-secondary position-absolute top-0 end-0 z-20 border-0 text-decoration-underline m-2 ps-2"><i class='bx bxs-pencil'></i> Edit</button>
+                </form>
                 <img src="{{ $row->post_image }}" class="blog-image object-fit-cover " alt="...">
                 <div class="blog-body flex-fill d-flex flex-column justify-content-between  p-2">
                     <div class="story mt-1">

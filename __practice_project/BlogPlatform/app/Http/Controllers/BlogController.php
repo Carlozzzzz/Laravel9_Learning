@@ -47,11 +47,10 @@ class BlogController extends Controller
 
             $data['last_id'] = $last_id;
 
-            $data['last_id'] = $last_id;
-
             $data["data_dataactivepage"] = "blog";
             
             return view($page, $data);
+            
         } return abort(404);
     }
 
