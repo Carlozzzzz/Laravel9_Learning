@@ -25,7 +25,7 @@
     <link href="{{ asset('/css/style.css') }}" rel="stylesheet">
     
 </head>
-<body>
+<body class="bg-gray-body">
     <x-message />
 
     <div id="app">
@@ -84,8 +84,9 @@
                     </div>
                 </div>
             </nav>
-    
             <div class="custom-margin">
+                @guest
+                @else
                 <nav class="navbar navbar-expand-md p-0 p-md-2 mb-2">
                     <div class="container">
                         <div class="header-nav collapse navbar-collapse navbar-dark justify-content-center" id="headerNav">
@@ -94,7 +95,7 @@
                                     <a href="/blogs" class="nav-link fs-5 py-2 py-md-3">Blogs</a>
                                 </li>
                                 <li class="nav-item ">
-                                    <a href="/user/post/create" class="nav-link fs-5 py-2 py-md-3">Create Post</a>
+                                    <a href="{{ url('/user/post/create') }}" class="nav-link fs-5 py-2 py-md-3">Create Post</a>
                                 </li>
                                 <li class="nav-item ">
                                     <a href="/user/posts" class="nav-link fs-5 py-2 py-md-3">My Blog</a>
@@ -174,11 +175,12 @@
                         
                     </div>
                 </div>
+                @endguest
                 
             </div>
         </header>
 
-        <main class="bg-gray-body">
+        <main>
             <div class="container">
                 @yield('content')
             </div>

@@ -41,13 +41,13 @@ Route::group(['prefix' => 'user'], function() {
      */
     Route::controller(App\Http\Controllers\User\PostController::class)->group(function() {
         Route::get('/posts', 'index');
-        Route::get('/post/{id}', 'show');
-        Route::post('/load-data', 'loadMoreData')->name('/user/load-data');
         Route::get('/post/create', 'create');
+        Route::get('/post/{id}', 'show');
         Route::post('/store', 'store');
         Route::get('/post/edit/{id}', 'edit');
         Route::put('/post/update/{post}', 'update');
         Route::delete('/post/delete/{post}', 'destroy');
+        Route::post('/load-data', 'loadMoreData')->name('/user/load-data');
     });
 
     /**

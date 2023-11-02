@@ -24,6 +24,10 @@ a {
     margin-top: 70px !important;   
 }
 
+.custom-margin-bottom {
+    margin-bottom: 70px !important;   
+}
+
 .featured-posts a {
     text-decoration: none;
     color: rgb(224, 220, 220);

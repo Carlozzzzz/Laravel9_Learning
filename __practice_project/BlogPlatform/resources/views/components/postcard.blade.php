@@ -23,7 +23,7 @@
                         <h5 class="fw-bold fs-4 ">{{ $row->title }}</h5>
                         <p class="">{{ $row->content }}</p>
                     </div>
-                    <a href="/post/{{ $row->id }}" class="text-decoration-none">
+                    <a href="{{ url('user/post/'.$row->id.'') }}" class="text-decoration-none">
                         <div class="cust-footer d-flex flex-column ">
                             <div class="details">
                                 <div class="blog-creator d-flex align-items-center">
