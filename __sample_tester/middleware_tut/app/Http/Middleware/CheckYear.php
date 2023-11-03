@@ -17,10 +17,8 @@ class CheckYear
     public function handle(Request $request, Closure $next, $year)
     {
         if($request->has('year') && ($request->year == $year)) {
-            dd($request->all());
             return $next($request);
         }
-        
         return redirect()->route('welcome');
     }
 }

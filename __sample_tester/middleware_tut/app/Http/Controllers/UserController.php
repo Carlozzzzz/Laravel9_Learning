@@ -7,6 +7,6 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     public function createUser() {
-        return "Hi";
+        return view("user");
     }
 }
