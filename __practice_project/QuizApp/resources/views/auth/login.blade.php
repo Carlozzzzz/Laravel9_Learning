@@ -11,7 +11,7 @@
                             @method("POST")
                             @csrf
                             <div class="form-floating mb-3">
-                                <input type="email" class="form-control" id="floatingInput" name="email" placeholder="name@example.com">
+                                <input type="email" class="form-control" id="floatingInput" name="email" placeholder="name@example.com" value=" {{ old('email') }}">
                                 <label class="text-muted" for="floatingInput">Email address</label>
                                 @error('email')
                                     <p class="fs-6 text-danger p-2"> {{ $message }} </p>
@@ -20,6 +20,9 @@
                             <div class="form-floating">
                                 <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password">
                                 <label class="text-muted" for="floatingPassword">Password</label>
+                                @error('password')
+                                    <p class="fs-6 text-danger p-2"> {{ $message }} </p>
+                                @enderror
                             </div>
                             <button type="submit" class="btn btn-primary w-100 mt-3 p-3">Login</button>
                             <div class="d-flex justify-content-evenly py-2">
@@ -31,6 +34,7 @@
                                     <label for="rememberMe" class="text-muted">Remember Me</label>
                                 </div>
                             </div>
+                            <p class="text-center mt-2 mb-0"><a href=" {{ route('register.show') }}" class="text-decoration-none">Register account?</a></p>
                         </form>
                     </div>
                 </div>
