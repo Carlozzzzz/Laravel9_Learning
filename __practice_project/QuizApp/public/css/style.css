@@ -1,0 +1,206 @@
+:root {
+    --header-height: 70px;
+    --sidenav-width: 62px;
+    --sidenav-neg-width: -62px;
+    --logo-width: 30px;
+
+    --bg-color: #f3eeeed0;
+    --bg-light-color: #fcfcfc;
+    --sub-color: #7743DB;
+    --main-text-color: #555151;
+    --sub-text-color:#5729ac;
+}
+
+/* Global Class */
+.bg-light-1 {
+    background-color: var(--bg-light-color);
+}
+
+.bg-sub-color {
+    background-color: var(--sub-color) !important;
+}
+
+.main-text-color {
+    color: var(--main-text-color);
+}
+
+header,
+footer,
+main,
+aside,
+div {
+}
+
+#pageHeader {
+    grid-area: header;
+}
+
+#pageFooter {
+    grid-area: footer;
+}
+
+#mainContent {
+    grid-area: main;
+}
+
+#sideNav {
+    grid-area: aside;
+}
+
+body {
+    background: var(--bg-color);
+
+    position:relative;
+    display: grid;
+    grid-template-areas:
+        "header"
+        "main"
+        "footer";
+    grid-template-rows: var(--header-height) 1fr 70px;
+    grid-template-columns: 1fr;
+    grid-row-gap: 2px;
+    grid-column-gap: 2px;
+    height: 100vh;
+    transition: all 0.3s;
+}
+
+/* Stack the layout on small devices/viewports. */
+@media all and (min-width: 576px) {
+    body {
+        grid-template-areas:
+            "aside header"
+            "aside main"
+            "aside footer";
+        grid-template-rows: var(--header-height) 1fr 100px; /* | */
+        grid-template-columns: auto 1fr auto; /* -- */
+    }
+}
+
+
+/*--------------------------------------------------------------
+# Header
+--------------------------------------------------------------*/
+.header .toggle-sidebnav-btn {
+    font-size: 32px;
+    margin-left: -3px;
+    cursor: pointer;
+    color: #f6f9ff;
+}
+
+#pageHeader .toggle-sidenav-btn {
+    font-size: 32px;
+    padding-left: -10px;
+    cursor: pointer;
+    color: white;
+}
+
+
+/*--------------------------------------------------------------
+# Sidenav
+--------------------------------------------------------------*/
+#sideNav {
+    position:fixed;
+    z-index: 20;
+    width: var(--sidenav-width);
+    height: 100vh;
+    top: 0;
+    transition: all 0.3s;
+    left: var(--sidenav-neg-width);
+}
+
+.toggle-sidenav {
+    margin-left: var(--sidenav-width);
+}
+.toggle-sidenav #sideNav{
+    left: 0;
+}
+
+@media all and (min-width: 768px) {
+    body {
+        margin-left: var(--sidenav-width);
+    }
+
+    #sideNav{
+       left: 0;
+    }
+}
+
+#sideNav a i{
+    color: var(--sub-text-color) !important;
+}
+
+#sideNav .nav-link.active,
+#sideNav .nav-link.active i {
+    background-color: var(--sub-color) !important;
+    color: white !important;
+}
+
+#sideNav li:hover,
+#sideNav .logout:hover {
+    background-color: var(--sub-color) !important;
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+
+#sideNav li:hover i,
+#sideNav .logout:hover i {
+    transition: all 0.3s;
+    color: white !important;
+}
+
+
+
+/*--------------------------------------------------------------
+# Banner Nav (Profile-Quiz details)
+--------------------------------------------------------------*/
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: -300px;
+    height: 100%;
+    width: 300px;
+    z-index: 40;
+    transition: all 0.3s;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #aab7cf transparent;
+    box-shadow: 0px 0px 20px rgba(1, 41, 112, 0.1);
+    background-color: #fff;
+}
+
+#bannerNav .toggle-sidebar-btn {
+    font-size: 32px;
+    padding-left: 10px;
+    cursor: pointer;
+}
+
+.toggle-sidebar .sidebar {
+    right: 0;
+}
+
+.toggle-sidebar .togger-margin {
+    transition: all 0.3s;
+    margin-right: 310px !important;
+}
+
+@media all and (min-width: 992px) {
+    body {
+        position:relative;
+        margin-right: 0;
+        transition: all 0.3s;
+    }
+    .toggle-sidebar {
+        
+        margin-right: 300px;
+        transition: all 0.3s;
+    }
+
+   
+}
+
+/*--------------------------------------------------------------
+# Tasks
+--------------------------------------------------------------*/
+.task-group {
+    width: 350px !important;
+}
