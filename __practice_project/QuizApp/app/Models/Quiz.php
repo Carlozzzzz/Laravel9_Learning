@@ -1,0 +1,33 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Quiz extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'user_id',
+        'quiz_img',
+        'title',
+        'instruction',
+        'check_points_per_item',
+        'points',
+        'attempts',
+        'time_limit_hr',
+        'time_limit_mm',
+        'time_limit_sec',
+        'start_date',
+        'end_date',
+        'feedback_timing',
+        'allow_answer_review',
+        'show_result_after_submission',
+        'randomize_choices',
+        'randomize_question',
+        'is_published',
+        'is_completed', //validation if quiz creation is done
+    ];
+}

@@ -24,12 +24,18 @@
     color: var(--main-text-color);
 }
 
-header,
-footer,
-main,
-aside,
-div {
+.banner-toggler {
+    transition: all 0.3s;
+    z-index: 997;
 }
+
+.banner-toggler .toggle-sidebar-btn {
+    font-size: 32px;
+    cursor: pointer;
+}
+
+
+/* Body */
 
 #pageHeader {
     grid-area: header;
@@ -148,6 +154,11 @@ body {
     color: white !important;
 }
 
+#sideNav .logout button {
+    background-color: transparent !important;
+    border: none;
+    width: 100%;
+}
 
 
 /*--------------------------------------------------------------
@@ -168,20 +179,11 @@ body {
     background-color: #fff;
 }
 
-#bannerNav .toggle-sidebar-btn {
-    font-size: 32px;
-    padding-left: 10px;
-    cursor: pointer;
-}
 
 .toggle-sidebar .sidebar {
     right: 0;
 }
 
-.toggle-sidebar .togger-margin {
-    transition: all 0.3s;
-    margin-right: 310px !important;
-}
 
 @media all and (min-width: 992px) {
     body {
@@ -203,4 +205,39 @@ body {
 --------------------------------------------------------------*/
 .task-group {
     width: 350px !important;
+}
+
+
+/*--------------------------------------------------------------
+# Teacher Quiz Nav
+--------------------------------------------------------------*/
+
+#quizNav .nav .quiz-nav-item {
+    transition: 0.2s all;
+    color: var(--main-text-color);
+}
+
+#quizNav .nav .quiz-nav-item:hover,
+#quizNav .nav .quiz-nav-item.active {
+    cursor: pointer;
+    background-color: var(--sub-color);
+    color: white;
+}
+
+
+/*--------------------------------------------------------------
+# Quiz - teacher
+--------------------------------------------------------------*/
+.quiz-content {
+    opacity: 0;
+    transition: opacity 0.3s ease; /* Add transition property */
+}
+
+.quiz-content.active {
+    opacity: 1;
+}
+
+.timer-input {
+    text-align: center;
+    width: 75px;
 }

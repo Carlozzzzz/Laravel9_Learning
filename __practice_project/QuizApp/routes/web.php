@@ -4,6 +4,8 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Teacher\QuizController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -39,10 +41,26 @@ Route::middleware(['auth'])->group(function () {
      */
     Route::post('/logout', [LogoutController::class , 'logout'])->name('logout.perform');
 
+    /**
+     * Dashboard
+     */
+
+    Route::get('/', [DashboardController::class, 'index']);
+    Route::get('/home', [DashboardController::class, 'index'])->name('home');
 
     /**
-     * Home Routes
-     */ 
-    Route::get('/', [HomeController::class, 'index']);
-    Route::get('/home', [HomeController::class, 'index'])->name('home');
+     * Teacher-Quiz Routes
+     */
+    Route::group(['prefix' => 'teacher'], function(){
+        /**
+         * Teacher quiz Route
+         */
+        Route::group(['prefix'=> 'quiz'], function(){
+            Route::get('/', [QuizController::class, 'create'])->name('quiz.index');
+            Route::get('/create', [QuizController::class, 'create'])->name('quiz.create');
+            Route::post('/create', [QuizController::class, 'store'])->name('quiz.store');
+            Route::get('/{quiz}/edit', [QuizController::class, 'edit'])->name('quiz.edit');
+            Route::patch('/{quiz}/update', [QuizController::class, 'update'])->name('quiz.update');
+        });
+    });
 });

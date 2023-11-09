@@ -14,15 +14,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\User::factory()->create([
-            'first_name' => 'Carlos',
-            'last_name' => 'Maralit',
-            'gender' => 'male',
-            'email' => 'echibot1@gmail.com',
-            'password' => bcrypt('password'),
-        ]);
-        
-        \App\Models\User::factory(10)->create();
+        $this->call(UserSeeder::class);
+        $this->call(QuizSeeder::class);
 
     }
 }
