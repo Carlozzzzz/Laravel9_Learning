@@ -24,9 +24,23 @@
     color: var(--main-text-color);
 }
 
+.sub-text-color {
+    color: var(--sub-text-color) !important;
+}
+
 .banner-toggler {
     transition: all 0.3s;
     z-index: 997;
+}
+
+.medium-checkbox {
+    width: 20px;
+    height: 20px;
+}
+
+.large-checkbox {
+    width: 25px;
+    height: 25px;
 }
 
 .banner-toggler .toggle-sidebar-btn {
@@ -192,8 +206,6 @@ body {
         transition: all 0.3s;
     }
     .toggle-sidebar {
-        
-        margin-right: 300px;
         transition: all 0.3s;
     }
 
@@ -226,7 +238,7 @@ body {
 
 
 /*--------------------------------------------------------------
-# Quiz - teacher
+# Quiz Overview - teacher
 --------------------------------------------------------------*/
 .quiz-content {
     opacity: 0;
@@ -241,3 +253,8 @@ body {
     text-align: center;
     width: 75px;
 }
+
+
+/*--------------------------------------------------------------
+# Quiz Overview - teacher
+--------------------------------------------------------------*/

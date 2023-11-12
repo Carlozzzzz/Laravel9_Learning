@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\teacher\QuestionerController;
 use App\Http\Controllers\Teacher\QuizController;
 use Illuminate\Support\Facades\Route;
 
@@ -61,6 +62,9 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/create', [QuizController::class, 'store'])->name('quiz.store');
             Route::get('/{quiz}/edit', [QuizController::class, 'edit'])->name('quiz.edit');
             Route::patch('/{quiz}/update', [QuizController::class, 'update'])->name('quiz.update');
+
+            Route::post('/question/create', [QuestionerController::class, 'store'])->name('question.store');
+
         });
     });
 });

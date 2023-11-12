@@ -1,0 +1,10 @@
+HTML Question - questionnare    = input question div
+    questionCategory            = actual question
+
+HTML Choices
+
+    txtChoice1 , isAnswerKey1   = choice1 and key
+    txtChoice2 , isAnswerKey2   = choice2 and key
+    txtChoice3 , isAnswerKey3   = choice3 and key
+    txtChoice4 , isAnswerKey4   = choice4 and key
+    

@@ -26,7 +26,7 @@
     </header>
 
     {{-- Main Navigation - left --}}
-    <x-master.side-nav />
+    <x-master.side-nav/>
 
     {{-- Main Content --}}
     <main id="mainContent"  class="container-fluid main-text-color px-2 px-lg-4 py-4">
