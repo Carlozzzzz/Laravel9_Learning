@@ -52,11 +52,12 @@
     <script src="//unpkg.com/alpinejs" defer></script>
     <script src="{{ asset('/js/main.js') }}"></script>
 
-    {{-- Custon Scripts --}}
-    @yield('custom-script')
-
+   
     {{-- Global Custom scripts --}}
     <script>
+        $(document).ready(function() {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
         function toggleActiveContent(className, activeNav) {
             
             $(className).removeClass('active');
@@ -77,5 +78,9 @@
             toggleActiveContent(className, activeContent);
         }
     </script>
+
+    {{-- Custon Scripts --}}
+    @yield('custom-script')
+
 </body>
 </html>

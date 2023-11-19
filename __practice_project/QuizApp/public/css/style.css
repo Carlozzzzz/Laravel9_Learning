@@ -16,10 +16,25 @@
     background-color: var(--bg-light-color);
 }
 
+.bg-gray-1 {
+    background-color: #f0f0f0;
+}
+
+.bg-green-1 {
+    background-color: #249b60;
+}
+
 .bg-sub-color {
     background-color: var(--sub-color) !important;
 }
 
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.cursor-not-allowed {
+    cursor:not-allowed;
+}
 .main-text-color {
     color: var(--main-text-color);
 }
