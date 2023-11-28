@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Quiz extends Model
 {
@@ -30,4 +31,9 @@ class Quiz extends Model
         'is_published',
         'is_completed', //validation if quiz creation is done
     ];
+
+    public function questions(): HasMany
+    {
+        return $this->hasMany(Question::class);
+    }
 }

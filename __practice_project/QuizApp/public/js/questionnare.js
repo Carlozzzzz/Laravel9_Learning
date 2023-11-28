@@ -3,6 +3,31 @@ let isAllowedNewQuestionnare = true;
 let questionDataId = 1;
 let checkListItemCount = 0;
 
+// for questionnare.js
+// <div class="container bg-white p-4">
+//     <div class="row g-4">
+//         <div class="col-12">
+//             <div class="questioner-header d-flex justify-content-end" id="questionerHeader">
+//             </div>
+//         </div>
+//         <div class="col-12 col-lg-8 col-xl-7 mx-auto">
+//             <form action=" {{route('question.store')}} " method="post">
+//                 @csrf
+//                 <div class="question-container" id="questionContainer">
+//                 </div>
+//                 <div class="cursor-pointer shadow-sm w-100 mb-3" id="createQuestionnare">
+//                     <div class="bg-gray-1 p-3">
+//                         <p class="mb-0 text-center fw-bold"><i class="bi bi-plus-lg"></i> Create New</p>
+//                     </div>
+//                 </div>
+//                 <div class="text-end">
+//                     <button type="submit" class="btn btn-primary">Save</button>
+//                     <button type="cancel" class="btn btn-secondary">Cancel</button>
+//                 </div>
+//             </form>
+//         </div>
+//     </div>
+// </div
 
 $(document).ready(function() {
 
@@ -59,11 +84,9 @@ $(document).ready(function() {
     // create a code snippet that will contain display for each catefory
     $('#createQuestionnare').click(function() {
 
-        let questionnareInputHTML;
-
         let questionCategory = $('#quizSettingsCategory').val();
 
-        questionnareInputHTML = populateInputHTML(questionCategory);
+        let questionnareInputHTML = populateInputHTML(questionCategory);
 
         // appending the questionnare to the questionnare div
         $('#questionContainer').append(questionnareInputHTML);
@@ -267,9 +290,7 @@ function populateInputHTML(questionCategory, isAllowedNewQuestionnare = true) {
             $('#createQuestionnare').removeClass('cursor-not-allowed');
             break;
     }
-    console.log(questionCategory);
     return questionnareInputHTML;
-    // $('#questionContainer').append(questionnareInputHTML);
 
 }
 

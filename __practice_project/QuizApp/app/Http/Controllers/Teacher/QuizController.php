@@ -10,12 +10,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Validation\ValidationException;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class QuizController extends Controller
 {
     public function index()
     {
         $page = "index";
+        
+        Alert::alert('Error', 'error');
+
         if(View::exists($page)) {
             $data = array();
             $data['title'] = "Quiz";
@@ -58,11 +62,13 @@ class QuizController extends Controller
         
         $data['data_datarecordfile'] = $user->quizzes()->createQuietly($validated);
 
-        $quizId =$data['data_datarecordfile']->id;
+        $quizId = $data['data_datarecordfile']->id;
+
+        // dd($data);
 
         return redirect()
                 ->route('quiz.edit', $quizId)
-                ->with(compact($data))
+                ->with($data)
                 ->with("message", "New Quiz has been created.");
 
     }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class LoginController extends Controller
 {
@@ -23,6 +24,7 @@ class LoginController extends Controller
 
             return redirect('/')->with('message', 'Welcome back!');
         }
+
         return back()->withErrors(['email' => "Login failed."])->onlyInput('email');
         //code...
     }

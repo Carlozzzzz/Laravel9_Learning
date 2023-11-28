@@ -12,6 +12,7 @@
 
     {{-- Custon Styles --}}
     <link rel="stylesheet" href="{{ asset('/css/style.css') }}">
+
 </head>
 <body>
     {{-- Message Notification --}}
@@ -51,13 +52,43 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="//unpkg.com/alpinejs" defer></script>
     <script src="{{ asset('/js/main.js') }}"></script>
+    @include('sweetalert::alert')
 
    
     {{-- Global Custom scripts --}}
     <script>
         $(document).ready(function() {
             $('[data-toggle="tooltip"]').tooltip();
+
+            const forms = document.querySelectorAll('.needs-validation');
+            let ispassvalidation = false;
+
+            Array.prototype.slice.call(forms).forEach((form) => {
+                form.addEventListener('submit', (event) => {
+                    if (!form.checkValidity()) {
+                        ispassvalidation = false;
+                    } else {
+                        ispassvalidation = true;
+                    }
+
+                    form.classList.add('was-validated');
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    if (ispassvalidation == true) {
+                        if(form.classList.contains(".questionnaire-input")) {
+
+                        }
+                        saveQuestionnaireHTML(form);
+                    }
+                }, false);
+                form.addEventListener('reset', (event) => {
+                    form.classList.remove('was-validated');
+                }, false);
+            });
         });
+
+        
         function toggleActiveContent(className, activeNav) {
             
             $(className).removeClass('active');
@@ -76,6 +107,13 @@
             activeContent.show();
 
             toggleActiveContent(className, activeContent);
+        }
+
+        function contentScrollFocus(element) {
+            const buttonsContainer = document.querySelector(element);
+            if (buttonsContainer) {
+                buttonsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
         }
     </script>
 

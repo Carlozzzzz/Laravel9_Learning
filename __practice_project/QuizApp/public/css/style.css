@@ -34,6 +34,7 @@
 
 .cursor-not-allowed {
     cursor:not-allowed;
+    pointer-events: none;
 }
 .main-text-color {
     color: var(--main-text-color);

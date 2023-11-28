@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\teacher\QuestionerController;
+use App\Http\Controllers\Teacher\QuestionnaireController;
 use App\Http\Controllers\Teacher\QuizController;
 use Illuminate\Support\Facades\Route;
 
@@ -65,6 +66,13 @@ Route::middleware(['auth'])->group(function () {
 
             Route::post('/question/create', [QuestionerController::class, 'store'])->name('question.store');
 
+        });
+
+        /**
+         * Teacher - Question and answers
+         */
+        Route::group(['prefix' => 'questionnaire'], function() {
+            Route::post('/{quiz}/store', [QuestionnaireController::class, 'store'])->name('questionnaire.store');
         });
     });
 });

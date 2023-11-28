@@ -9,7 +9,7 @@
 <h4>General Details</h4>
 
 <div class="quiz-content generalContent active">
-    {{-- @php
+    @php
         $xroute = 'quiz.store';
         if(isset($data_datarecordfile) && $data_datarecordfile != "") {
             $xroute = 'quiz.update';
@@ -138,14 +138,13 @@
                 </div>
             </div>
         </div>
-    </form> --}}
-    <x-teacher.quiz-question />
+    </form>
 
 </div>
 
 <div class="quiz-content questionContent d-none">
     {{-- Quesitioner Component --}}
-    <x-teacher.quiz-question />
+    <x-teacher.quiz-question :data="$data_datarecordfile" />
 </div>
 
 <div class="quiz-content overviewContent d-none">
@@ -154,9 +153,155 @@
 @endsection
 
 @section('custom-script')
-<script src="{{ asset('/js/questionnare.js?2') }}"></script>
-{{-- <script src="{{ asset('/js/questionnare.js') }}"></script> --}}
+{{-- <script src="{{ asset('/js/questionnare.js?2') }}"></script> --}}
+{{-- <script src="{{ asset('/js/questionSettings.js') }}"></script> --}}
 <script>
+    $(document).ready(function() {
+        $('.quiz-nav-item').click(function() {
+
+        let quizNavBtns = $('.quiz-nav-item');
+        let quizContent = $('.quiz-content');
+
+        const $this = $(this);
+
+        toggleActiveContent(quizNavBtns, $this);
+        toggleActiveDisplay(quizContent, $this);
+        });
+    });
+</script>
+
+<script>
+    const QuestionCategories = {
+        MULTIPLE_CHOICE: 'multiple_choice',
+        TRUE_OR_FALSE: 'true_or_false',
+        CHECKLIST: 'checklist',
+        ENUMERATION: 'enumeration',
+        IDENTIFICATION: 'identification',
+    };
+
+    let questionnaireArr = [], checkListItemArr = [];
+
+    $(document).ready(function() {
+
+         // Populate Question Category Dropdown
+        Object.keys(QuestionCategories).forEach(key => {
+            const value = QuestionCategories[key];
+            const option = `<option value="${value}">${key}</option>`;
+            $('#quiz-settings-categories').append(option);
+        });
+        
+        $('#create-questionnaire').click(function() {
+            let selectedCategory = $('#quiz-settings-categories').val();
+
+            if (!selectedCategory) {
+                alert("Please select an category");
+                return;
+            }
+
+            // display an input here
+            const inputHTML = populateInputHTML(selectedCategory);
+            contentScrollFocus('.questionnaire-buttons');
+
+            $('#questionnaire-container').append(inputHTML);
+
+        });
+
+    });
+
+    function populateInputHTML(questionCategory, isAllowedNewQuestionnaire = true) {
+        const questionCount = questionnaireArr.length + 1;
+        
+        let questionnaireInputHTML;
+        let isEnabled = false;
+
+        if(!isAllowedNewQuestionnaire){
+            return '';
+        } 
+
+        toggleCreateQuestionnaireCursor(isEnabled);
+
+        questionnaireInputHTML = getInputHTML(questionCategory, questionCount);
+
+        if(!questionnaireInputHTML) {
+            isEnabled = true;
+            toggleCreateQuestionnaireCursor(isEnabled);
+        }
+
+        return questionnaireInputHTML;
+    }
+
+    function getInputHTML(questionCategory, questionIndex) {
+        const questionInputHTML = createQuestionInputHTML(questionIndex);
+        const questionCreateButton = createSaveCancelButtons();
+
+        let choicesHTML = '';
+
+        switch (questionCategory) {
+            case QuestionCategories.MULTIPLE_CHOICE:
+                choicesHTML = populateChoicesInputHTML(questionCategory, 4);
+                break;
+            case QuestionCategories.TRUE_OR_FALSE:
+                // choicesHTML = populateChoicesInputHTML(questionCategory, 1);
+                break;
+
+            case QuestionCategories.CHECKLIST:
+                // choicesHTML = populateChoicesInputHTML(questionCategory);
+                break;
+
+            case QuestionCategories.ENUMERATION:
+                // choicesHTML = populateChoicesInputHTML(questionCategory);
+                break;
+
+            default:
+                // choicesHTML = getDefaultHTML();
+                alert("Question Category was not found.");
+                break;
+        }
+
+
+        return `
+            <form data-category="${questionCategory}" class="questionnaire-input ${questionCategory}-input position-relative shadow mb-3 p-4 needs-validation" id="questionnaire-input" novalidate>
+                <button type="button" class="remove-question position-absolute top-0 end-0 bg-transparent border-0 fw-bold fs-3 sub-text-color mx-3 my-1 p-0" id="remove-question"><i class="bi bi-x"></i></button>
+                <div class="${questionCategory}">
+
+                    ${questionInputHTML}
+
+                    <div class="choices-container">
+                        <p class="form-label">Choices :</p>
+                        
+                        ${choicesHTML}
+                        ${questionCreateButton}
+                        
+                    </div>
+                    
+
+                </div>
+            </form>
+        `;
+    }
+
+    function createQuestionInputHTML(questionIndex) {
+        return `
+            <div class="question mb-3">
+                <label for="category-question" class="form-label">Question --${questionIndex}--</label>
+                <input type="text" class="form-control category-question" id="category-question" name="category_question" placeholder="Enter your question here..." required>
+                <div class="invalid-feedback">
+                    Please provide a Question.
+                </div>
+            </div>
+        `;
+    }
     
+    function toggleCreateQuestionnaireCursor(isEnabled) {
+        const createQuestionnaireButton = $('#create-questionnaire');
+    
+        if (isEnabled) {
+            createQuestionnaireButton.addClass('cursor-pointer');
+            createQuestionnaireButton.removeClass('cursor-not-allowed');
+        } else {
+            createQuestionnaireButton.removeClass('cursor-pointer');
+            createQuestionnaireButton.addClass('cursor-not-allowed');
+        }
+    }
 </script>
 @endsection
