@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>{{ isset($title) ? $title : "EXAM" }} </title>
 
     {{-- Bootstrap --}}
@@ -49,6 +51,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
     {{-- JS Libraries --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.10.1/sweetalert2.all.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="//unpkg.com/alpinejs" defer></script>
     <script src="{{ asset('/js/main.js') }}"></script>
@@ -60,6 +63,16 @@
         $(document).ready(function() {
             $('[data-toggle="tooltip"]').tooltip();
 
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            bootstrapFormValidate();
+        });
+
+        function bootstrapFormValidate() {
             const forms = document.querySelectorAll('.needs-validation');
             let ispassvalidation = false;
 
@@ -75,20 +88,24 @@
                     event.preventDefault();
                     event.stopPropagation();
 
-                    if (ispassvalidation == true) {
-                        if(form.classList.contains(".questionnaire-input")) {
 
+                    if (ispassvalidation == true) {
+                        if(form.classList.contains("questionnaire-input")) {
+                            saveQuestionnaireHTML(form);
+                            // console.log("Form is validated successfully.");
+                        } else {
+                            console.log("Class was not found.", form.classList);
                         }
-                        saveQuestionnaireHTML(form);
+                    } else {
+                        console.log("Needs further validation.");
                     }
                 }, false);
                 form.addEventListener('reset', (event) => {
                     form.classList.remove('was-validated');
                 }, false);
             });
-        });
 
-        
+        }
         function toggleActiveContent(className, activeNav) {
             
             $(className).removeClass('active');

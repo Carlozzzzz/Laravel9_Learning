@@ -21,8 +21,8 @@
 <div class="container bg-white p-4">
     <div class="row g-4">
         <div class="col-12 col-lg-8 col-xl-7 mx-auto">
-            <form action="{{ route('questionnaire.store', $data->id) }}" method="post">
-                @csrf
+            {{-- <form action="{{ route('questionnaire.store', $data->id) }}" method="post">
+                @csrf --}}
 
                 <div class="questionnaire-container" id="questionnaire-container">
                     {{-- Append new question here --}}
@@ -38,7 +38,7 @@
                     <button type="submit" class="btn btn-primary">Save</button>
                     <button type="button" class="btn btn-secondary">Cancel</button>
                 </div>
-            </form>
+            {{-- </form> --}}
         </div>
     </div>
 </div>

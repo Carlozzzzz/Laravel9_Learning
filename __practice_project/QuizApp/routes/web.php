@@ -73,6 +73,12 @@ Route::middleware(['auth'])->group(function () {
          */
         Route::group(['prefix' => 'questionnaire'], function() {
             Route::post('/{quiz}/store', [QuestionnaireController::class, 'store'])->name('questionnaire.store');
+            
         });
+
+        Route::group(['prefix' => 'api', 'middleware' => ['api']], function () {
+            Route::post('/questionnaire/{quiz}store2', [QuestionnaireController::class, 'store2'])->name('api.questionnaire.store2');
+        });
+        
     });
 });

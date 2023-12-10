@@ -382,7 +382,7 @@ $(document).ready(function() {
     // Save
 
     function saveQuestionnaireHTML(form){
-        let questionObj= {};
+        let questionObj = {};
         let dataId = questionnaireArr.length + 1;
 
         if (form.classList.contains(QuestionCategories.MULTIPLE_CHOICE + "-input")) {
