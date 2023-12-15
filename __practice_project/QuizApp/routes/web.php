@@ -73,6 +73,7 @@ Route::middleware(['auth'])->group(function () {
          */
         Route::group(['prefix' => 'questionnaire'], function() {
             Route::post('/{quiz}/store', [QuestionnaireController::class, 'store'])->name('questionnaire.store');
+            Route::post('/{quiz}/update', [QuestionnaireController::class, 'update'])->name('questionnaire.update');
             
         });
 

@@ -24,15 +24,25 @@ class QuestionnaireRequest extends FormRequest
     public function rules()
     {
         $category = $this->input('category');
+        $questionOption = $this->input('question_option');
 
         $commonRules = [
             'question' => 'required|string|min:3',
             'category' => 'required|string',
+            'choice.*' => 'required|string|min:3',
+           
         ];
+
+        if($questionOption == "update"){
+            return array_merge($commonRules, [
+                'question_id' => 'required',
+                'answer_key' => 'required',
+                'choiceId.*' => 'required',
+            ]);
+        }
 
         if ($category == "multiple_choice") {
             return array_merge($commonRules, [
-                'choice.*' => 'required|string|min:3',
                 'answer_key' => 'required',
             ]);
         } elseif ($category == "true_or_false") {
@@ -41,7 +51,6 @@ class QuestionnaireRequest extends FormRequest
             ]);
         } elseif ($category == "checklist") {
             return array_merge($commonRules, [
-                'choice.*' => 'required|string|min:3',
                 'answer_key.*' => 'required',
             ]);
         } elseif ($category == "enumeration") {
