@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Teacher\QuestionController;
 use App\Http\Controllers\teacher\QuestionerController;
 use App\Http\Controllers\Teacher\QuestionnaireController;
 use App\Http\Controllers\Teacher\QuizController;
@@ -63,9 +64,6 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/create', [QuizController::class, 'store'])->name('quiz.store');
             Route::get('/{quiz}/edit', [QuizController::class, 'edit'])->name('quiz.edit');
             Route::patch('/{quiz}/update', [QuizController::class, 'update'])->name('quiz.update');
-
-            Route::post('/question/create', [QuestionerController::class, 'store'])->name('question.store');
-
         });
 
         /**
@@ -74,6 +72,7 @@ Route::middleware(['auth'])->group(function () {
         Route::group(['prefix' => 'questionnaire'], function() {
             Route::post('/{quiz}/store', [QuestionnaireController::class, 'store'])->name('questionnaire.store');
             Route::post('/{quiz}/update', [QuestionnaireController::class, 'update'])->name('questionnaire.update');
+            Route::post('/{question}/delete', [QuestionnaireController::class, 'delete'])->name('questionnaire.delete');
             
         });
 

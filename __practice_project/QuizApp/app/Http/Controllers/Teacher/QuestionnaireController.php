@@ -105,13 +105,13 @@ class QuestionnaireController extends Controller
         // $xtestdata = Question::with(['choices', 'answers'])->find(559);
 
         $xretobj["data"] = $xdata;
-        $xretobj["message"] = "Question created successfully";
+        $xretobj["message"] = "Question created successfully!";
 
         return response()->json($xretobj, 200);
     }
 
-    // working , fix answerID save and update
-    public function update(Quiz $quiz, QuestionnaireRequest $request){
+    public function update(Quiz $quiz, QuestionnaireRequest $request)
+    {
 
         $validated = $request->validated();
 
@@ -184,10 +184,66 @@ class QuestionnaireController extends Controller
 
         }
 
+        // comeback, fix category below
+        dd($validated);
+
+        if($category == "checklist" || $category == "enumeration") {
+            $xdata["choices"] = array();
+            $xdata["answer_key"] = array();
+
+            $choiceIdArr = $validated["choiceId"];
+
+            foreach ($validated['choice'] as $choice => $value) {
+                $choiceKeyId = $choice . "_id";
+                $choiceId = $choiceIdArr[$choiceKeyId];
+
+                $choiceData = Choice::where("id", $choiceId)->first();
+                $choiceData->choice = $value;
+                $choiceData->save();
+                
+                // Choices details
+                $choiceId = $choiceData->id;
+                $choiceValue = $value;
+                $xdata["choices"][] = [
+                    "id" => $choiceId,
+                    "name" => $choice,
+                    "value" => $choiceValue
+                ];
+
+                // update the answer here
+                $answerKey = $validated["answer_key"];
+
+                if($answerKey == $choice) {
+                    $answerData = Answer::where('question_id', $questionId)->first();
+                    $answerData->choice_id = $choiceId;
+                    $answerData->answer = $choiceValue;
+                    $answerData->save();
+                    // Answer details
+
+                    $answerId = $answerData->id;
+                    $answerValue = $answerData->answer;
+                    $xdata["answer_key"][] = [
+                        "id" => $answerId,
+                        "name" => $answerKey,
+                        "value" => $answerValue
+                    ];
+                }
+            }
+        }
+
         $xretobj["data"] = $xdata;
-        $xretobj["message"] = "Question updated successfully";
+        $xretobj["message"] = "Question updated successfully!";
 
         return response()->json($xretobj, 200);
 
+    }
+
+    public function delete(Question $question)
+    {
+        $questionData = $question->delete();
+
+        $xretobj["message"] = "Question deleted successfully!";
+
+        return response()->json($xretobj, 200);
     }
 }

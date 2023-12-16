@@ -257,57 +257,7 @@
 
             });
 
-            $('#questionnaire-container').on('click', '.remove-questionnaire', function() {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't undo this!",
-                    icon: 'warning',
-                    allowOutsideClick: false,
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!',
-                }).then((result) => {
-                    if(result.value) {
-                        allowCreateNewQuestionnaire(true);
-
-                        if(this.parentNode.parentNode.classList.contains('questionnaire-output')) {
-                            const nodeID = this.parentNode.parentNode.getAttribute('data-id');
-                            
-                            // removing the selected node from the array
-                            questionnaireArr = questionnaireArr.filter(element => element.data_id !== parseInt(nodeID));
-
-                            // resetting the id on each object
-                            questionnaireArr = questionnaireArr.map((data, index) => {
-                                data.id = index;
-                                return data;
-
-                            });
-
-                            $('#questionnaire-container .questionnaire-output').remove();
-                            $('#question-list p').remove();
-                            
-                            // repopulate the list with new set of id
-                            questionnaireArr.forEach((data) => {
-                                console.log(data);
-                                let questionnaire = createOutputHTML(data);
-
-                                $('#questionnaire-container').append(questionnaire);
-                                createBannerQuestionOutputHTML(data);
-                            });
-
-                            let questionIndex = questionnaireArr.length + 1;
-                            $("#questionnaire-input .question label").text("Question --"+questionIndex+"--");
-
-                        } else {
-                            this.parentNode.parentNode.remove();
-                        }
-                    } else {
-                        return;
-                    }
-                });
-            });
-
+            // working
             $('#questionnaire-container').on('click', '.edit-questionnaire', function() {
 
                 const parentDataId = $(this).closest(".questionnaire-output").attr("data-id");
@@ -434,8 +384,6 @@
                 data: formData,
                 success: (response) => {
 
-                    console.log("Save", response.data);
-
                     const questionObj = processQuestionnaireOutputData(myForm, response.data)
                     
                     const questionnaireOutputHTML = createOutputHTML(questionObj);
@@ -490,9 +438,6 @@
                 data: formData,
                 success: (response) => {
 
-                    console.log("Update: ",response.data);
-                    // return;
-
                     const questionObj = processQuestionnaireOutputData(myForm, response.data)
 
                     const questionnaireOutputHTML = createOutputHTML(questionObj);
@@ -532,6 +477,86 @@
                 }
             });
         }
+
+        function Delete(obj) {
+            const parentDataId = $(obj).closest("#questionnaire-output").attr("data-id");
+            const questionId = questionnaireArr[parentDataId].question[0].id;
+
+
+            Swal.fire({
+                title: "Are you sure?",
+                text : "You won't undo this!",
+                icon : "warning",
+                allowOutsideClick : false,
+                showCancelButton : true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!',
+            }).then((result) => {
+                if(result.value) {
+
+                    let url = '{{ route("questionnaire.delete", ":id") }}';
+                    url = url.replace(':id', questionId);
+
+                    $.ajax({
+                        type : "POST",
+                        url : url,
+                        dataType : "JSON",
+                        success : function(response) {
+
+                            allowCreateNewQuestionnaire(true);
+
+                            let parentForm = $(obj).closest("#questionnaire-output");
+
+                            if(parentForm.length > 0) {
+                                const nodeID = parentForm.attr('data-id');
+                                
+                                const questionId = questionnaireArr[nodeID].question[0].id;
+
+                                // removing the selected node from the array
+                                questionnaireArr = questionnaireArr.filter(element => element.data_id !== parseInt(nodeID));
+
+                                // resetting the id on each object
+                                questionnaireArr = questionnaireArr.map((data, index) => {
+                                    data.id = index;
+                                    return data;
+
+                                });
+
+                                $('#questionnaire-container .questionnaire-output').remove();
+                                $('#question-list p').remove();
+                                
+                                // repopulate the list with new set of id
+                                questionnaireArr.forEach((data) => {
+                                    console.log(data);
+                                    let questionnaire = createOutputHTML(data);
+
+                                    $('#questionnaire-container').append(questionnaire);
+                                    createBannerQuestionOutputHTML(data);
+                                });
+
+                                let questionIndex = questionnaireArr.length + 1;
+                                $("#questionnaire-input .question label").text("Question --"+questionIndex+"--");
+
+                            } else {
+                                parentForm.remove();
+                            }
+
+                            if(response) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Your work has been saved.',
+                                    text: "Questionnaire has been deleted.",
+                                    allowOutsideClick: false
+                                })
+                            }
+                        }
+                    });
+                } else {
+                    return;
+                }
+            });
+        }
     
         // Front End functions
         function processQuestionnaireOutputData(form, questionDataArr) {
@@ -556,7 +581,6 @@
             return questionDataArr;
         }
 
-        // working
         function populateQuestionnaireEditInputData(questionObj){
             const question = questionObj.question[0];
             const questionId = question.id;
@@ -698,9 +722,6 @@
 
                 let answerKey = questionObj.answer_key[0].name;
 
-                console.log("answerKey :", answerKey);
-
-                
                 choiceHTML = choices.map((choice, choiceIndex) => {
                     const choiceKey = choice.name; // Assuming 'name' is the key
                     const choiceValue = choice.value;
@@ -735,6 +756,8 @@
                         </div>`;
                 }).join('');
             } else if(questionCategory == QuestionCategories.CHECKLIST || questionCategory == QuestionCategories.ENUMERATION) {
+
+                console.log(choices);
                 choiceHTML = choices.map((element, index) => {
                     const choiceKey = element.name;
                     const choiceValue = element.value;
@@ -980,10 +1003,7 @@
         }
 
 
-        /**
-         * Helper  
-         */
-
+        // Helper
         function populateDropdownCategory() {
             Object.keys(QuestionCategories).forEach(key => {
                 const value = QuestionCategories[key];
@@ -1017,7 +1037,7 @@
 
             if(formType == "output") {
                 buttons += `<button type="button" class="btn btn-primary edit-questionnaire border-0 fw-bold fs-5 py-1 px-2"><i class="bi bi-pencil-fill"></i></button>`;
-                buttons += `<button type="button" class="btn btn-danger remove-questionnaire border-0 fw-bold fs-5 ms-1 py-1 px-2"><i class="bi bi-trash"></i></button>`;
+                buttons += `<button type="button" class="btn btn-danger remove-questionnaire border-0 fw-bold fs-5 ms-1 py-1 px-2" onclick="Delete(this)"><i class="bi bi-trash"></i></button>`;
             }
 
 
