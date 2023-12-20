@@ -246,9 +246,18 @@ body {
 }
 
 #quizNav .nav .quiz-nav-item:hover,
+#quizNav .nav .quiz-nav-item:hover a,
 #quizNav .nav .quiz-nav-item.active {
     cursor: pointer;
     background-color: var(--sub-color);
+    color: white;
+} 
+
+#quizNav .nav .quiz-nav-item a {
+    color: var(--main-text-color);
+}
+
+#quizNav .nav .quiz-nav-item.active a {
     color: white;
 }
 

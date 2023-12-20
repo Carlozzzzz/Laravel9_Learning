@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\Teacher;
 
 use App\Http\Controllers\Controller;
-use App\Models\Answer;
+use App\Models\Choice;
 use Illuminate\Http\Request;
 
-class AnswerController extends Controller
+class ChoiceController extends Controller
 {
-    public function delete(Answer $answer)
+    public function delete(Choice $choice)
     {
-        $answerData = $answer->delete();
+        $choiceData = $choice->delete();
 
         $xretobj["message"] = "Choice answer deleted successfully!";
 

@@ -10,33 +10,17 @@ use App\Models\Quiz;
 use App\Models\Question;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\View;
 use Illuminate\Validation\Rule;
 
 class QuestionnaireController extends Controller
 {
     public function index(Quiz $quiz) {
-        $page = "teacher.quiz.add_edit";
-        if(View::exists($page)) {
-            $data = array();
-            $data['title'] = "Quiz";
-            $data['page'] = "Quiz";
-            
-            $data["data_dataactivepage"] = "teacher_quiz_question";
-            $data["data_datarecordfile"] =  $quiz;
-            return view($page, $data);
-
-        } return abort(404);
-
-    }
-
-    public function getQuestionnaire(Quiz $quiz) {
         $xdata = array();
         $xdata['data'] = Question::with(['choices', 'answers'])->where('quiz_id', $quiz->id)->get();
 
         return response()->json($xdata, 200);
-    }
 
+    }
     public function store(Quiz $quiz, QuestionnaireRequest $request)
     {                
         $validated = $request->validated();
@@ -45,20 +29,32 @@ class QuestionnaireController extends Controller
 
         $xretobj = array();
         $xdata = array();
+        $xdata2 = array();
 
         $questionData = $quiz->questions()->createQuietly($validated);
 
         $xdata["category"] = $validated["category"];
-        $xdata["id"] = $questionData->id;
-        $xdata["question"] = $questionData->question;
+        $xdata["question"] = array();
+        $xdata2["question"] = $questionData;
+        $xdata["question"] = [
+            "id" => $questionData->id,
+            "value" => $questionData->question
+        ];
 
         if($category == "multiple_choice" || $category == "true_or_false") {
 
+            $xdata["choices"] = array();
+            $xdata["answer_key"] = array();
 
             foreach ($validated['choice'] as $choice => $value) {
                 $choiceData = $questionData->choices()->createQuietly(["choice" => $value]);
                 $choiceValue = $value;
-                $xdata["choices"][] = $choiceData;
+                $xdata2['choices'][] = $choiceData;
+                $xdata['choices'][] = [
+                    "id" => $choiceData->id,
+                    "name" => $choice,
+                    "value" => $choiceValue,
+                ];
 
                 if ($choice == $validated["answer_key"]) {
                     $answerValue = $value;
@@ -69,11 +65,15 @@ class QuestionnaireController extends Controller
 
                     $answerData = $choiceData->answers()->createQuietly($xarr_param);
 
-                    $xdata['answers'][] = $answerData;
+                    $xdata2['answer_key'][] = $answerData;
+                    $xdata['answer_key'][] = [
+                        "id" => $answerData->id,
+                        "name" => $choice,
+                        "value" => $answerValue,
+                    ];
             
                 }
             }
-
 
         } else if($category == "checklist" || $category == "enumeration") {
 
@@ -82,7 +82,12 @@ class QuestionnaireController extends Controller
 
             foreach ($validated["choice"] as $choice => $value) {
                 $choiceData = $questionData->choices()->createQuietly(["choice" => $value]);
-                $xdata['choices'][] = $choiceData;
+                
+                $xdata['choices'][] = [
+                    "id" => $choiceData->id,
+                    "name" => $choice,
+                    "value" => $value,
+                ];
 
                 if($category == "checklist") {
                     if (isset($validated["answer_key"]) && is_array($validated["answer_key"])) {
@@ -95,8 +100,12 @@ class QuestionnaireController extends Controller
                             ];
 
                             $answerData = $choiceData->answers()->createQuietly($xarr_param);
-                            $xdata["answers"][] = $answerData;
-                           
+
+                            $xdata['answer_key'][] = [
+                                "id" => $answerData->id,
+                                "name" => $choice,
+                                "value" => $answerData->answer,
+                            ];
                         }
                     }
                 }
@@ -104,42 +113,46 @@ class QuestionnaireController extends Controller
         }
 
         
-        // $xretobj["data"] = $xdata;
         $xretobj["data"] = $xdata;
-
+        $xretobj["data2"] = $xdata2;
         $xretobj["message"] = "Question created successfully!";
 
         return response()->json($xretobj, 200);
     }
 
-    // working
     public function update(Quiz $quiz, QuestionnaireRequest $request)
     {
-
-        $xretobj = array();
-        $xdata = array();
 
         $validated = $request->validated();
 
         $category = $validated["category"];
         $questionId = $validated["question_id"];
 
+        $xretobj = array();
+        $xdata = array();
+
         $xdata["category"] = $validated["category"];
 
-        $questionData = Question::where("id", $questionId)->first();
+        $questionData = Question::where("id", $questionId)
+            ->first();
+
         $questionData->question = $validated["question"];
+
         $questionData->save();
 
         $questionId = $questionData->id;
-        $question = $questionData->question;
 
         // Question Details
-        $xdata["id"] = $questionId;
-        $xdata["question"] = $question;
+        $xdata["question"] = [
+            "id" => $questionId,
+            "value" => $questionData->question
+        ];
 
         if($category == "multiple_choice" || $category == "true_or_false") {
 
-            $choiceIdArr = array();
+            $xdata["choices"] = array();
+            $xdata["answer_key"] = array();
+
             $choiceIdArr = $validated["choiceId"];
 
             foreach ($validated['choice'] as $choice => $value) {
@@ -153,8 +166,11 @@ class QuestionnaireController extends Controller
                 // Choices details
                 $choiceId = $choiceData->id;
                 $choiceValue = $value;
-
-                $xdata["choices"][] = $choiceData;
+                $xdata["choices"][] = [
+                    "id" => $choiceId,
+                    "name" => $choice,
+                    "value" => $choiceValue
+                ];
 
                 // update the answer here
                 $answerKey = $validated["answer_key"];
@@ -164,17 +180,32 @@ class QuestionnaireController extends Controller
                     $answerData->choice_id = $choiceId;
                     $answerData->answer = $choiceValue;
                     $answerData->save();
+                    // Answer details
 
-                    // return data
-                    $xdata["answers"][] = $answerData;
+                    $answerId = $answerData->id;
+                    $answerValue = $answerData->answer;
+                    $xdata["answer_key"][] = [
+                        "id" => $answerId,
+                        "name" => $answerKey,
+                        "value" => $answerValue
+                    ];
                 }
             }
 
         }
 
+        // comeback, fix category below
+        // dd($validated);
+
         if($category == "checklist" || $category == "enumeration") {
+            $xdata["choices"] = array();
+            $xdata["answer_key"] = array();
 
             $choiceIdArr = $validated["choiceId"];
+            // $answerKeyIdArr = $validated
+
+            
+            // dd($answerKeyArr, $recentAnswerKeyIdArr);
 
             foreach ($validated['choice'] as $choice => $choiceValue) {
                 $choiceKeyId = $choice . "_id";
@@ -197,7 +228,11 @@ class QuestionnaireController extends Controller
                 
                 // Choices details
                 $choiceId = $choiceData->id;
-                $xdata["choices"][] = $choiceData;
+                $xdata["choices"][] = [
+                    "id" => $choiceId,
+                    "name" => $choice,
+                    "value" => $choiceValue
+                ];
 
                 // update the answer here
                 if($category == "checklist") {
@@ -215,8 +250,14 @@ class QuestionnaireController extends Controller
                                 $answerData = $choiceData->answers()->createQuietly($xarr_param);
                             }
     
+                            $answerId = $answerData->id;
                             $answerValue = $answerData->answer;
-                            $xdata["answers"][] = $answerData;
+                            $xdata["answer_key"][] = [
+                                "id" => $answerId,
+                                "name" => $choice,
+                                "value" => $answerValue
+                            ];
+    
                         }
                     }
                 }
@@ -224,8 +265,6 @@ class QuestionnaireController extends Controller
             }
 
         }
-
-        // dd($xdata);
 
         $xretobj["data"] = $xdata;
         $xretobj["message"] = "Question updated successfully!";

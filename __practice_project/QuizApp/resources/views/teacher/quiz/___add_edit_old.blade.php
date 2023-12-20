@@ -1,7 +1,7 @@
 @extends('layouts.app-master')
 
 @section('header')
-    <x-teacher.quiz-header :data="isset($data_datarecordfile) ? $data_datarecordfile : null" :activepage="$data_dataactivepage"/>
+    <x-teacher.quiz-header />
 @endsection
 
 @section('content')
@@ -26,7 +26,7 @@
 
     <h4>General Details</h4>
 
-    <div class="quiz-content generalContent {{ isset($data_dataactivepage) && $data_dataactivepage == 'teacher_quiz' ? 'active' : 'd-none' }}">
+    <div class="quiz-content generalContent d-none ">
         @php
             $xroute = 'quiz.store';
             if(isset($data_datarecordfile) && $data_datarecordfile != "") {
@@ -160,7 +160,7 @@
 
     </div>
 
-    <div class="quiz-content questionContent {{ isset($data_dataactivepage) && $data_dataactivepage == 'teacher_quiz_question' ? 'active' : 'd-none' }}">
+    <div class="quiz-content questionContent active">
         {{-- Quesitioner Component --}}
         {{-- <x-teacher.quiz-question :data="$data_datarecordfile" /> --}}
 
@@ -182,21 +182,17 @@
 
     </div>
 
-    <div class="quiz-content statusContent" {{ isset($data_dataactivepage) && $data_dataactivepage == 'teacher_quiz_status' ? 'active' : 'd-none' }}>
-        Status
+    <div class="quiz-content overviewContent d-none">
+        overviewContent
     </div>
 @endsection
-
-{{-- comeback --}}
-{{-- fix validation for missing answer --}}
-{{-- fix the pages if theres bugs --}}
 
 @section('custom-script')
 
     {{-- <script src="{{ asset('/js/test.js?2') }}"></script> --}}
     {{-- <script src="{{ asset('/js/questionSettings.js') }}"></script> --}}
 
-    {{-- <script>
+    <script>
         $(document).ready(function() {
             $('.quiz-nav-item').click(function() {
 
@@ -209,7 +205,7 @@
             toggleActiveDisplay(quizContent, $this);
             });
         });
-    </script> --}}
+    </script>
 
     <script>
         const QuestionCategories = {
@@ -265,14 +261,6 @@
 
             $('#questionnaire-container').on('click', '.edit-questionnaire', function() {
 
-                // Re appending as output
-                const activeQuestionnaireForm = $('.questionnaire-form');
-                const formDataId = activeQuestionnaireForm.attr('data-id');
-                if(activeQuestionnaireForm.length > 0) {
-                    reAppendOpenForm(formDataId); 
-                    activeQuestionnaireForm.remove();
-                }
-
                 const parentDataId = $(this).closest(".questionnaire-output").attr("data-id");
 
                 const currentQuestionObj = questionnaireArr.filter(element => element.data_id == parentDataId)[0];
@@ -291,16 +279,15 @@
 
                 $(this).closest('.questionnaire-output').remove(); //
                 
-                appendInOrder(parentDataId, questionnaireHTML); //
+                toggleQuestionnaireManageBtns();
                 
-                // toggleQuestionnaireManageBtns();
+                appendInOrder(parentDataId, questionnaireHTML); //
 
                 generateChoiceInputItems(currentQuestionObj);
 
                 $('#questionnaire-form').removeClass("save");
 
                 $('#questionnaire-form').addClass("update");
-
                 $('#questionnaireOption').val("update");
 
                 $("#submit-questionnaire").text("Update Question");
@@ -313,25 +300,21 @@
 
             // comeback, removed data is being added - remove it on questionnaireArr
             $('#questionnaire-container').on('click', '#cancel-questionnaire', function() {
-                // const myForm = document.querySelector('#questionnaire-form');
                 const myForm = document.querySelector('#questionnaire-form');
 
-                const questionnaireForm = $(this).closest("#questionnaire-form");
+                questionnaireForm = $(this).closest("#questionnaire-form");
 
-                if(questionnaireForm.hasClass("save")) {
+                if(myForm.classList.contains("save")) {
                     // do nothing, will call quetionnaireForm at the end of ifelse condition
-                } else if(questionnaireForm.hasClass("update")) {
+                } else if(myForm.classList.contains("update")) {
                     // trying jquery things out
-                    // const parentDataId = myForm.getAttribute("data-id");
-                    const parentDataId = questionnaireForm.attr("data-id");
+                    const parentDataId = myForm.getAttribute("data-id");
 
-                    reAppendOpenForm(parentDataId)
+                    const currentQuestionObj = questionnaireArr.filter(element => element.data_id == parentDataId)[0];
 
-                    // const currentQuestionObj = questionnaireArr.filter(element => element.data_id == parentDataId)[0];
+                    const questionnaireOutputHTML = createOutputHTML(currentQuestionObj);
 
-                    // const questionnaireOutputHTML = createOutputHTML(currentQuestionObj);
-
-                    // appendInOrder(parentDataId, questionnaireOutputHTML)
+                    appendInOrder(parentDataId, questionnaireOutputHTML)
 
                 }
 
@@ -368,6 +351,8 @@
 
             $('#questionnaire-container').on('click', '#questionnaire-form .remove-checklist-itemaa', function() {
 
+                // console.log("Removing Item.");
+
                 $(this).parent().parent().remove()
 
                 $('#questionnaire-form .choices-container input:text').each(function(index, data) {
@@ -386,6 +371,7 @@
 
                     if(questionCategory == QuestionCategories.CHECKLIST){
                         let newAnswerkey = $(this).closest('.answer-item').find('.checklist-key input:checkbox').attr('data-id', id);
+                        // console.log(newAnswerkey);
                     }
                 });
 
@@ -394,15 +380,10 @@
         });
 
         // Process to Database
+        // working
         function getData() {
-            const datarecordfileId = "{{ isset($data_datarecordfile) ? optional($data_datarecordfile)->id : '' }}";
-
-            if (!datarecordfileId) {
-                return;
-            }
-
-            const url = `{{ route('questionnaire.getQuestionnaire', ':id') }}`.replace(':id', datarecordfileId);
-
+            const url = "{{ route('questionnaire.index', "$data_datarecordfile->id") }}";
+            // console.log(url);
             $.ajax({
                 type: "POST",
                 url : url,
@@ -432,15 +413,9 @@
         }
 
         function save() {
-            const datarecordfileId = "{{ isset($data_datarecordfile) ? optional($data_datarecordfile)->id : '' }}";
-
-            if (!datarecordfileId) {
-                return;
-            }
-            const url = `{{ route('questionnaire.store', ':id') }}`.replace(':id', datarecordfileId);
-
             const formData = $('#questionnaire-form').serializeArray();
             const myForm = document.querySelector('#questionnaire-form');
+            const url = "{{ route('questionnaire.store', "$data_datarecordfile->id") }}";
 
             $.ajax({
                 type:'POST',
@@ -451,7 +426,7 @@
                 data: formData,
                 success: (response) => {
 
-                    console.log("Save: ", response.data);
+                    console.log(response.data2);
 
                     const questionObj = processQuestionnaireOutputData(myForm, response.data)
                     
@@ -492,14 +467,9 @@
         }
 
         function update() {
-            const datarecordfileId = "{{ isset($data_datarecordfile) ? optional($data_datarecordfile)->id : '' }}";
-            if (!datarecordfileId) {
-                return;
-            }
-            const url = `{{ route('questionnaire.update', ':id') }}`.replace(':id', datarecordfileId);
-
             const formData = $('#questionnaire-form').serializeArray();
             const myForm = document.querySelector('#questionnaire-form');
+            const url = "{{ route('questionnaire.update', "$data_datarecordfile->id") }}";
 
             $.ajax({
                 type:'POST',
@@ -510,9 +480,9 @@
                 data: formData,
                 success: (response) => {
 
-                    console.log("update: ", response);
-
                     const questionObj = processQuestionnaireOutputData(myForm, response.data)
+
+                    // console.log("update response:", response.data);
 
                     const questionnaireOutputHTML = createOutputHTML(questionObj);
 
@@ -603,6 +573,7 @@
                                 
                                 // repopulate the list with new set of id
                                 questionnaireArr.forEach((data) => {
+                                    // console.log(data);
                                     let questionnaire = createOutputHTML(data);
 
                                     $('#questionnaire-container').append(questionnaire);
@@ -663,6 +634,7 @@
 
 
             if(parentForm.hasClass("save")) {
+                // console.log("save function");
                 repopulateAnswerInput();
             } else if (parentForm.hasClass("update")) {
                 const choiceId = $(obj).closest('.answer-item').find('input:hidden').val();
@@ -694,6 +666,8 @@
                             url : url,
                             dataType : "JSON",
                             success : function(response) {
+
+                                // console.log(response.message);
 
                                 // remove the item from the array
                                 const questionId = parentForm.find('.question-container input:hidden').val();
@@ -750,7 +724,9 @@
 
         // working
         function processQuestionnaireOutputData(form, questionDataArr) {
-            questionDataArr = processResponseData(questionDataArr);
+            // console.log(questionDataArr);
+            let test = processResponseData(questionDataArr);
+            console.log(test);
             
             let dataId;
             let questionCategory = questionDataArr.category;
@@ -774,7 +750,6 @@
         function processResponseData(responseData) {
 
             function questionnaireObjAltData(element) {
-                // console.log("Data : ", element);
                 let questionnaireObj = [];
 
                 questionnaireObj.category = element.category;
@@ -784,8 +759,7 @@
                     value : element.question
                 }
 
-                const choices = [...element.choices];
-
+                const choices = element.choices;
                 questionnaireObj.choices = choices.map((choice, choiceIndex) => {
                     let choiceObj = {
                         id : choice.id,
@@ -795,54 +769,38 @@
                     return choiceObj;
                 });
 
-                console.log("questionnaireObj.choices: ", questionnaireObj.choices);
+                const answers = element.answers;
+                questionnaireObj.answer_key = answers.map((answer) => {
+                    const answerId = answer.id;
 
-                if(questionnaireObj.category != "enumeration") {
-                    const answers = [...element.answers];
-                    questionnaireObj.answer_key = answers.map((answer) => {
-                        const answerId = answer.id;
-    
-                        const matchingChoice = questionnaireObj.choices.find((choice) => choice.id === answer.choice_id);
-
-                        if(matchingChoice) {
-                            let answerValue;
-                            if(questionnaireObj.category == "checklist") {
-                                answerValue = matchingChoice.name;
-                            } else {
-                                answerValue = matchingChoice.value;
-                            }
-                            let answerObj = {
-                                id : answerId,
-                                name : matchingChoice.name,
-                                value : answerValue
-                            }
-    
-                            console.log(matchingChoice);
-
-                            return answerObj;
+                    const matchingChoice = questionnaireObj.choices.find((choice) => choice.id === answer.choice_id);
+                    if(matchingChoice) {
+                        if(questionnaireObj.category == "checklist") {
+                            matchingChoice.value = matchingChoice.name;
                         }
-                        
-                        return null;
-                    });
-                }
+                        let answerObj = {
+                            id : answerId,
+                            name : matchingChoice.name,
+                            value : matchingChoice.value
+                        }
+
+                        return answerObj;
+                    }
+                    
+
+                    return null;
+
+                });
 
 
                 return questionnaireObj;
             }
 
-            const checkArray = Array.isArray(responseData);
+            let questionnaireObjArr = responseData.map((element) => {
+                return questionnaireObjAltData(element)
+            });
 
-            if(checkArray) {
-                responseData = responseData.map((element) => {
-                    return questionnaireObjAltData(element)
-                });
-            } else {
-                console.log("Not an array");
-
-                responseData = questionnaireObjAltData(responseData);
-            }
-
-            return responseData ?? null;
+            return questionnaireObjArr ?? null;
         }
 
         function populateQuestionnaireEditInputData(questionObj){
@@ -979,11 +937,15 @@
 
         function createOutputHTML(questionObj) {
 
+            // console.log("createOutputNew :", questionObj);
             let questionCount = questionObj.data_id + 1;
             let question = questionObj.question.value;
             let questionCategory = questionObj.category;
             let choices = questionObj.choices;
             let editDeleteQuestionnaireBtnsHTML = editDeleteQuestionnaireButtons("output");
+
+            // console.log("Output obj : ", questionObj);
+            // console.log("Output question : ", questionObj);
 
             let choiceHTML = '';
 
@@ -996,6 +958,8 @@
                     const choiceValue = choice.value;
                     const isAnswerKey = (answerKey === choiceKey);
                     
+                    // console.log(answerKey, choiceKey);
+
                     return `
                         <div class="choice-${choiceIndex} d-flex align-items-center mb-2">
                             <div class="form-check">
@@ -1024,6 +988,7 @@
                 }).join('');
             } else if(questionCategory == QuestionCategories.CHECKLIST || questionCategory == QuestionCategories.ENUMERATION) {
 
+                // console.log(choices);
                 choiceHTML = choices.map((element, index) => {
                     const choiceKey = element.name;
                     const choiceValue = element.value;
@@ -1333,16 +1298,6 @@
             } else {
                 $('#questionnaire-container').append(questionnaireHTML);
             }
-        }
-
-        function reAppendOpenForm(formDataId) {
-            const currentQuestionObj = questionnaireArr.filter(element => element.data_id == formDataId)[0];
-
-            console.log(currentQuestionObj);
-
-            const questionnaireOutputHTML = createOutputHTML(currentQuestionObj);
-
-            appendInOrder(formDataId, questionnaireOutputHTML);
         }
 
         function attachedSubmitEvent() {

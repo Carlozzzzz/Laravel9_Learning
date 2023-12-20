@@ -34,9 +34,15 @@ class QuestionnaireRequest extends FormRequest
         ];
 
         if($questionOption == "update"){
+            $myRule = '';
+            if($category == "checklist" || $category == "enumeration") {
+                $myRule = 'array';
+            } else {
+                $myRule = 'required';
+            }
             return array_merge($commonRules, [
                 'question_id' => 'required',
-                'answer_key' => 'required',
+                'answer_key' => $myRule,
                 'choiceId.*' => 'required',
             ]);
         }
@@ -73,6 +79,7 @@ class QuestionnaireRequest extends FormRequest
             'choice.*.required' => 'The choice field is required.',
             'choice.*.min' => 'The choice field must be at least 3 characters.',
             'answer_key.*.required' => 'The answer key is required.',
+            'choiceId.*.required' => 'The choice id is required.',
         ];
     }
 }

@@ -5,6 +5,8 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Teacher\AnswerController;
+use App\Http\Controllers\Teacher\ChoiceController;
 use App\Http\Controllers\Teacher\QuestionController;
 use App\Http\Controllers\teacher\QuestionerController;
 use App\Http\Controllers\Teacher\QuestionnaireController;
@@ -64,17 +66,32 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/create', [QuizController::class, 'store'])->name('quiz.store');
             Route::get('/{quiz}/edit', [QuizController::class, 'edit'])->name('quiz.edit');
             Route::patch('/{quiz}/update', [QuizController::class, 'update'])->name('quiz.update');
+
+            Route::get('/{quiz}/questions', [QuestionnaireController::class, 'index'])->name('questionnaire.index');
+
         });
 
         /**
          * Teacher - Question and answers
          */
         Route::group(['prefix' => 'questionnaire'], function() {
+            Route::post('/{quiz}/getQuestionnaire', [QuestionnaireController::class, 'getQuestionnaire'])->name('questionnaire.getQuestionnaire');
             Route::post('/{quiz}/store', [QuestionnaireController::class, 'store'])->name('questionnaire.store');
             Route::post('/{quiz}/update', [QuestionnaireController::class, 'update'])->name('questionnaire.update');
             Route::post('/{question}/delete', [QuestionnaireController::class, 'delete'])->name('questionnaire.delete');
             
         });
+
+        Route::group(['prefix' => 'answer'], function() {
+            Route::post('/{answer}/delete', [AnswerController::class, 'delete'])->name('answer.delete');
+            
+        });
+
+        Route::group(['prefix' => 'choice'], function() {
+            Route::post('/{choice}/delete', [ChoiceController::class, 'delete'])->name('choice.delete');
+            
+        });
+
 
         Route::group(['prefix' => 'api', 'middleware' => ['api']], function () {
             Route::post('/questionnaire/{quiz}store2', [QuestionnaireController::class, 'store2'])->name('api.questionnaire.store2');
