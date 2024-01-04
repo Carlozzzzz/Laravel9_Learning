@@ -47,7 +47,10 @@ class QuizController extends Controller
 
         $randNumberArr = array();
 
-        $hasQuestionOrder = StudentQuestionSortOrder::where('quiz_id', $quiz->id)->exists();
+        $hasQuestionOrder = StudentQuestionSortOrder::where('quiz_id', $quiz->id)
+            ->where('user_id', auth()->user()->id)
+            ->exists();
+
 
         if(!$hasQuestionOrder) {
             foreach($questions as $question) {
@@ -81,11 +84,10 @@ class QuizController extends Controller
                 // })->with(['choices', 'student_question_sort_order'])->first();
 
                 $firstQuestion = Question::whereHas('student_question_sort_order', function($query) {
-                    $query->where('question_order', 1);
-                })->first();
+                        $query->where('question_order', '=', 1)->where('user_id', auth()->user()->id);
+                        })
+                    ->first();
         }
-
-        // dd($firstQuestion);
 
         return redirect()->route('student.quiz.question', $firstQuestion);
         // return view($page, $data);

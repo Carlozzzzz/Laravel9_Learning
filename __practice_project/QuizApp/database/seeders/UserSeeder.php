@@ -22,6 +22,15 @@ class UserSeeder extends Seeder
             'password' => bcrypt('password'),
             'user_type' => 'teacher',
         ]);
+
+        \App\Models\User::factory()->create([
+            'first_name' => 'Echi',
+            'last_name' => 'Bot',
+            'gender' => 'male',
+            'email' => 'echibot2@gmail.com',
+            'password' => bcrypt('password'),
+            'user_type' => 'student',
+        ]);
         
         \App\Models\User::factory(100)->create();
     }

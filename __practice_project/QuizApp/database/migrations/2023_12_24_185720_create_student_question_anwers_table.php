@@ -28,8 +28,9 @@ return new class extends Migration
                 ->constrained()
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
+            $table->string('answer')->nullable(); // ** for input answers
             $table->integer('point')->nullable();
-            $table->string('question_answer')->nullable();
+            $table->string('is_correct')->nullable();
             $table->timestamps();
         });
     }

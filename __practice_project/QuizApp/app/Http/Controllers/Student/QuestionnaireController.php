@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Student;
 use App\Http\Controllers\Controller;
 use App\Models\Quiz;
 use App\Models\Question;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -27,11 +28,9 @@ class QuestionnaireController extends Controller
         $data = array();
 
         $data['data_dataactivepage'] = "student_quiz_question";
-        $data['data_currentquestion'] = Question::whereHas('student_question_sort_order', function($query) {
-                        $query->where('user_id', auth()->user()->id);
-                        })
-                ->where('id', $question->id)
-                ->first();
+        $data['data_currentquestion'] = $question->load(['student_question_sort_order' => function($query) {
+            $query->where('user_id', auth()->user()->id);
+        }]);
 
         $quiz = $question->quiz()->first();
 
@@ -51,23 +50,27 @@ class QuestionnaireController extends Controller
 
         $xdata = array();
         $quizId = $question->quiz_id;
+        $currentUser = auth()->user();
 
-        $currrentQuestion = Question::whereHas('student_question_sort_order', function($query) {
-                            $query->where('user_id', auth()->user()->id);
-                        })->with(['quiz', 'choices', 'student_question_sort_order'])
-                ->where('id', $question->id)
-                ->first();
+        $currrentQuestion = $question->load(['student_question_sort_order' => function($query) {
+            $query->where('user_id', auth()->user()->id);
+        }, 'choices']);
 
+                
         $currentOrder = $currrentQuestion->student_question_sort_order->question_order;
+        $prevQuestionOrder = $currentOrder - 1;
     
-        $prevQuestion = Question::whereHas('student_question_sort_order', function($query) use ($currentOrder)  {
-                            $query->where('question_order', '<', $currentOrder);
-                        })->with(['quiz', 'choices', 'student_question_sort_order'])
-                ->first();
-        $nextQuestion = Question::whereHas('student_question_sort_order', function($query) use ($currentOrder)  {
-                            $query->where('question_order', '>', $currentOrder);
-                        })->with(['quiz', 'choices', 'student_question_sort_order'])
-                ->first();
+        $prevQuestion = $nextQuestion = Question::whereHas('student_question_sort_order', function($query) use ($currentUser, $prevQuestionOrder) {
+            $query->where('user_id', $currentUser->id)
+                ->where('question_order', $prevQuestionOrder);
+        })->with('choices')->first();
+
+        $nextQuestionOrder = $currentOrder + 1;
+
+        $nextQuestion = $nextQuestion = Question::whereHas('student_question_sort_order', function($query) use ($currentUser, $nextQuestionOrder) {
+            $query->where('user_id', $currentUser->id)
+                ->where('question_order', $nextQuestionOrder);
+        })->with('choices')->first();
 
         $xdata['data']['question_order'] = $currentOrder;
         $xdata['data']['current_questionnaire'] = $currrentQuestion;
