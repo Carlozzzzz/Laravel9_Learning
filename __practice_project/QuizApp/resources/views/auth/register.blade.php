@@ -47,6 +47,19 @@
                             @enderror
                         </div>
                         <div class="form-floating mb-3">
+                            <select class="form-select" id="floatingSelect" name="user_type"
+                                aria-label="Select User type">
+                                <option selected><span class="text-muted">Select User type</span></option>
+                                <option value="teacher">Teacher</option>
+                                <option value="student">Student</option>
+                                {{-- <option value="admin">Admin</option> --}}
+                            </select>
+                            <label for="floatingSelect">User Type</label>
+                            @error('user_type')
+                            <p class="fs-6 text-danger p-2"> {{ $message }} </p>
+                            @enderror
+                        </div>
+                        <div class="form-floating mb-3">
                             <input type="password" class="form-control" id="floatingPassword" name="password"
                                 placeholder="Password">
                             <label class="text-muted" for="floatingPassword">Password</label>

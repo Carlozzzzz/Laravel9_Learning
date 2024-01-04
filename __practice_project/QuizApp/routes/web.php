@@ -5,10 +5,10 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Student\QuizController as StudentQuizController;
+use App\Http\Controllers\Student\QuestionnaireController as StudentQuestionnaireController;
 use App\Http\Controllers\Teacher\AnswerController;
 use App\Http\Controllers\Teacher\ChoiceController;
-use App\Http\Controllers\Teacher\QuestionController;
-use App\Http\Controllers\teacher\QuestionerController;
 use App\Http\Controllers\Teacher\QuestionnaireController;
 use App\Http\Controllers\Teacher\QuizController;
 use Illuminate\Support\Facades\Route;
@@ -56,6 +56,7 @@ Route::middleware(['auth'])->group(function () {
     /**
      * Teacher-Quiz Routes
      */
+
     Route::group(['prefix' => 'teacher'], function(){
         /**
          * Teacher quiz Route
@@ -98,4 +99,34 @@ Route::middleware(['auth'])->group(function () {
         });
         
     });
+
+    // Route::group(['prefix' => 'teacher'], function() {
+    //     Route::get('/', [QuizController::class, 'index'])->name('quiz.index');
+    // });
+
+    /**
+     * Student Routes
+     */
+
+    Route::group(['prefix' => 'student'], function(){
+        Route::group(['prefix' => 'quiz'], function(){
+            Route::get('/index', [StudentQuizController::class, 'index'])->name('student.quiz.index');
+            Route::get('/{quiz}/view', [StudentQuizController::class, 'view'])->name('student.quiz.view');
+            
+            
+            Route::get('/{quiz}/startQuiz', [StudentQuizController::class, 'startQuiz1'])->name('student.quiz.startQuiz1');
+            Route::get('/{question}/question', [StudentQuestionnaireController::class, 'getQuestion'])->name('student.quiz.question');
+            
+            
+            
+            Route::get('/{quiz}/questions', [StudentQuestionnaireController::class, 'viewQuestion'])->name('student.quiz.questions');
+            Route::post('/{quiz}/startQuiz', [StudentQuizController::class, 'startQuiz'])->name('student.quiz.startQuiz');
+            Route::post('/{question}/question', [StudentQuestionnaireController::class, 'getQuestionnaire'])->name('student.quiz.getQuestionnaire');
+            Route::post('/{question}/prev', [StudentQuestionnaireController::class, 'prevOrNextQuestionnaire'])->name('student.quiz.prevQuestionnaire');
+            Route::post('/{question}/next', [StudentQuestionnaireController::class, 'prevOrNextQuestionnaire'])->name('student.quiz.nextQuestionnaire');
+        });
+
+
+    });
+
 });

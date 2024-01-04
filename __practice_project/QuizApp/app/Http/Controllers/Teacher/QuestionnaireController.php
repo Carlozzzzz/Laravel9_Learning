@@ -200,8 +200,12 @@ class QuestionnaireController extends Controller
                 $xdata["choices"][] = $choiceData;
 
                 // update the answer here
-                if($category == "checklist") {
-                    foreach ($validated["answer_key"] as $answer => $answerValue) {
+                if($category == "checklist" && isset($validated["answer_key"])) {
+
+                    $answerKeyArr = $validated["answer_key"];
+                    $answerKeyIdArr = [];
+
+                    foreach ($answerKeyArr as $answer => $answerValue) {
                         if($answerValue == $choice) {
                             $answerData = Answer::where('choice_id', $choiceId)->first();
                             if($answerData) {
@@ -219,10 +223,27 @@ class QuestionnaireController extends Controller
                             $xdata["answers"][] = $answerData;
                         }
                     }
+
+    
+                    foreach($answerKeyArr as $answer => $answerValue) {
+                        $choiceKeyId = $answerValue . "_id";
+                        $choiceId = $choiceIdArr[$choiceKeyId];
+                        $answerKeyIdArr[] = $choiceId;
+                    }
+
+                    $answerData = Answer::where('question_id', $questionId)->get();
+                    foreach($answerData as $key => $value) {
+                        $wasFound = in_array($value->choice_id, $answerKeyIdArr);
+                        if (!$wasFound) { 
+                            Answer::where("choice_id", $value->choice_id)->delete(); 
+                        }
+                    }
                 }
 
+    
             }
 
+            // update the removed answer
         }
 
         // dd($xdata);

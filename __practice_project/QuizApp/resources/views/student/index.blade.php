@@ -1,3 +1,5 @@
+{{-- Refactor this --}}
+
 @extends('layouts.app-master')
 
 @section('header')
@@ -7,13 +9,13 @@
 @section('content')
     <div>
         <div class="content-header">
-            <h4>Main Quizzes</h4>
+            <h4>Student Quiz</h4>
         </div>
         <div class="content-body">
             <div class="row g-3" id="dataContainer">
                 
                 @foreach ($data_datarecordfile as $data)
-                    <x-teacher.quiz-card :data="$data" />
+                    <x-student.quiz-card :data="$data" />
                 @endforeach
         
             </div>

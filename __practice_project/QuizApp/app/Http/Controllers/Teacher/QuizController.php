@@ -16,7 +16,7 @@ class QuizController extends Controller
 {
     public function index()
     {
-        $page = "index";
+        $page = "test";
         
         Alert::alert('Error', 'error');
 
@@ -91,12 +91,38 @@ class QuizController extends Controller
     public function update(Quiz $quiz, QuizStoreRequest $request)
     {
         $validated = $request->validated();
-        
+
+        if(!isset($validated['check_points_per_item'])) {
+            $validated['check_points_per_item'] = 0;
+            $validated['points'] = null;
+        }
+
+        if(!isset($validated['allow_answer_review'])) {
+            $validated['allow_answer_review'] = 0;
+        }
+
+        if(!isset($validated['show_result_after_submission'])) {
+            $validated['show_result_after_submission'] = 0;
+        }
+
+        if(!isset($validated['randomize_choices'])) {
+            $validated['randomize_choices'] = 0;
+        }
+
+        if(!isset($validated['randomize_question'])) {
+            $validated['randomize_question'] = 0;
+        }
+
+        if(!isset($validated['is_published'])) {
+            $validated['is_published'] = 0;
+        }
+
         $quiz->update($validated);
 
         $data['data_datarecordfile'] = $quiz;
 
-        $quizId =$data['data_datarecordfile']->id;
+
+        $quizId = $data['data_datarecordfile']->id;
 
         return redirect()
                 ->route('quiz.edit', $quizId)

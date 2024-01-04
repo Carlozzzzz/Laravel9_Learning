@@ -6,12 +6,29 @@
 
     --bg-color: #f3eeeed0;
     --bg-light-color: #fcfcfc;
+    --bg-green-1: #30c57b;
+    --bg-green-2: #249b60;
+    --bg-gray-1: #434444;
+    --bg-gray-2: #636464;
+    --bg-gray-3: #8c8f8f;
     --sub-color: #7743DB;
     --main-text-color: #555151;
+    --main-text-light-color: #e9e1e1;
     --sub-text-color:#5729ac;
 }
 
 /* Global Class */
+
+.banner-toggler {
+    transition: all 0.3s;
+    z-index: 997;
+}
+
+.banner-toggler .toggle-sidebar-btn {
+    font-size: 32px;
+    cursor: pointer;
+}
+
 .bg-light-1 {
     background-color: var(--bg-light-color);
 }
@@ -21,7 +38,11 @@
 }
 
 .bg-green-1 {
-    background-color: #249b60;
+    background-color: var(--bg-green-1);
+}
+
+.bg-green-2 {
+    background-color: var(--bg-green-2);
 }
 
 .bg-sub-color {
@@ -36,6 +57,42 @@
     cursor:not-allowed;
     pointer-events: none;
 }
+
+.hover-bg-green-1:hover {
+    background-color: var(--bg-green-1);
+    color: var(--main-text-light-color);
+    transition: all 0.3s;
+}
+
+.hover-bg-green-2:hover {
+    background-color: var(--bg-green-2);
+    color: var(--main-text-light-color);
+    transition: all 0.3s;
+}
+
+.hover-bg-gray-1:hover {
+    background-color: var(--bg-gray-1);
+    color: var(--main-text-light-color);
+    transition: all 0.3s;
+}
+
+.hover-bg-gray-2:hover {
+    background-color: var(--bg-gray-2);
+    color: var(--main-text-light-color);
+    transition: all 0.3s;
+}
+
+.hover-bg-gray-3:hover {
+    background-color: var(--bg-gray-3);
+    color: var(--main-text-light-color);
+    transition: all 0.3s;
+}
+
+.large-checkbox {
+    width: 25px;
+    height: 25px;
+}
+
 .main-text-color {
     color: var(--main-text-color);
 }
@@ -44,29 +101,18 @@
     color: var(--sub-text-color) !important;
 }
 
-.banner-toggler {
-    transition: all 0.3s;
-    z-index: 997;
-}
-
 .medium-checkbox {
     width: 20px;
     height: 20px;
 }
 
-.large-checkbox {
-    width: 25px;
-    height: 25px;
+.min-height-100 {
+    min-height: 100%;
 }
 
-.banner-toggler .toggle-sidebar-btn {
-    font-size: 32px;
-    cursor: pointer;
-}
 
 
 /* Body */
-
 #pageHeader {
     grid-area: header;
 }

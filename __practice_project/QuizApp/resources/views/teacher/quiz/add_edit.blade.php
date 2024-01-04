@@ -1,9 +1,5 @@
 @extends('layouts.app-master')
 
-@section('header')
-    <x-teacher.quiz-header :data="isset($data_datarecordfile) ? $data_datarecordfile : null" :activepage="$data_dataactivepage"/>
-@endsection
-
 @section('content')
 
     <style>
@@ -60,8 +56,9 @@
         
                     <!-- Pointing System -->
                     <div class="mb-3">
-                        <label for="points" class="form-label fw-bold">Points per item?</label> <input type="checkbox" class="form-check-input ms-1" id="checkPointsPerItem" name="check_points_per_item" value="1" {{ old('check_points_per_item', isset($data_datarecordfile->title) ? $data_datarecordfile->check_points_per_item : "") ? "checked" : "" }}>
-                        <input type="number" class="form-control @error('points') is-invalid @enderror" id="points" name="points" placeholder="Points per question." value="{{ old('points', isset($data_datarecordfile->points) ? $data_datarecordfile->points : "") }}" disabled>
+                        <label for="points" class="form-label fw-bold">Points per item?</label>
+                        <input type="checkbox" class="form-check-input ms-1" id="checkPointsPerItem" name="check_points_per_item" value="1" {{ old('check_points_per_item', (isset($data_datarecordfile->check_points_per_item) && $data_datarecordfile->check_points_per_item == 1) ? true : "") ? "checked" : "" }}>
+                        <input type="number" class="form-control @error('points') is-invalid @enderror" id="points" name="points" placeholder="Points per question." value="{{ old('points', isset($data_datarecordfile->points) ? $data_datarecordfile->points : "") }}" {{ (isset($data_datarecordfile->check_points_per_item) && $data_datarecordfile->check_points_per_item == 1) ? "" : "disabled"}}>
                         @error('points')
                             <p class="m-2 text-danger fs-6"> {{ $message }}</p>
                         @enderror
@@ -196,20 +193,30 @@
     {{-- <script src="{{ asset('/js/test.js?2') }}"></script> --}}
     {{-- <script src="{{ asset('/js/questionSettings.js') }}"></script> --}}
 
-    {{-- <script>
+    <script>
         $(document).ready(function() {
-            $('.quiz-nav-item').click(function() {
+            // $('.quiz-nav-item').click(function() {
 
-            let quizNavBtns = $('.quiz-nav-item');
-            let quizContent = $('.quiz-content');
+            // let quizNavBtns = $('.quiz-nav-item');
+            // let quizContent = $('.quiz-content');
 
-            const $this = $(this);
+            // const $this = $(this);
 
-            toggleActiveContent(quizNavBtns, $this);
-            toggleActiveDisplay(quizContent, $this);
+            // toggleActiveContent(quizNavBtns, $this);
+            // toggleActiveDisplay(quizContent, $this);
+            // });
+
+            $('#checkPointsPerItem').change(function() {
+                $('#points').prop('disabled', !this.checked);
+                if(!this.checked) {
+                    $('#points').val("");
+                }
             });
         });
-    </script> --}}
+
+
+    </script>
+
 
     <script>
         const QuestionCategories = {
@@ -817,8 +824,6 @@
                                 value : answerValue
                             }
     
-                            console.log(matchingChoice);
-
                             return answerObj;
                         }
                         
@@ -928,7 +933,7 @@
                     // creating add item button, instead of populating choices
                     choicesHTML = `
                             <div class="cursor-pointer w-100 my-3" id="create-checklist-item">
-                                <div class="text-white bg-green-1 rounded p-2">
+                                <div class="text-white bg-green-2 rounded p-2">
                                     <p class="mb-0 text-center fw-bold"><i class="bi bi-plus-lg"></i> Add new item</p>
                                 </div>
                             </div>

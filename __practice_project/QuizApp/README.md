@@ -4,3 +4,4 @@
 
 ## Composer
         composer require realrashid/sweet-alert
+        composer require barryvdh/laravel-debugbar

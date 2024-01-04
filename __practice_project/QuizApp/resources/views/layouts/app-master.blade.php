@@ -24,7 +24,8 @@
     <header id="pageHeader" class="header d-flex align-items-center">
         <span class="toggle-sidenav-btn d-md-none"><i class="bi bi-list main-text-color"></i></span>
 
-        @yield('header')
+        @include('layouts.partials.header')
+        {{-- @yield('header') --}}
         {{-- <x-master.header :page="$page" /> --}}
     </header>
 
@@ -37,9 +38,9 @@
     </main>
 
     {{-- Profile | Content details - right --}}
-    <div id="bannerNav" class="sidebar">
-        <x-master.side-bar />
-    </div>
+    
+    {{-- <x-master.side-bar /> --}}
+    @include('layouts.partials.side-bar')
 
     {{-- Right banner toggler --}}
     <span class="bg-sub-color text-white rounded position-fixed bottom-0 end-0 z-990 p-2 m-2 banner-toggler"><i class="toggle-sidebar-btn bi bi-arrow-bar-left fs-5"></i></span>

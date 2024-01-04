@@ -639,7 +639,7 @@
                 // creating add item button, instead of populating choices
                 choicesHTML = `
                         <div class="cursor-pointer w-100 my-3" id="create-checklist-item">
-                            <div class="text-white bg-green-1 rounded p-2">
+                            <div class="text-white bg-green-2 rounded p-2">
                                 <p class="mb-0 text-center fw-bold"><i class="bi bi-plus-lg"></i> Add new item</p>
                             </div>
                         </div>
