@@ -94,7 +94,7 @@
                         <h6>Timer</h6>
                     </div>
                     <div class="card-body">
-                        <p class="mb-0"><span><i class="bi bi-stopwatch"></i> Remaining time : </span><span class="quiz-timer">{{ $data_quiz->time_limit_hr }}:{{ $data_quiz->time_limit_mm }}:{{ $data_quiz->time_limit_sec }}</span></p>
+                        <p class="mb-0"><span><i class="bi bi-stopwatch"></i> Remaining time : </span><span id="quiz-timer"></span></p>
                     </div>
                 </div>
                 <div class="questionnaireDetailsContainer card mb-3">

@@ -25,7 +25,9 @@ return new class extends Migration
                 ->onDelete('cascade');
             $table->dateTime('started_at')->nullable();
             $table->dateTime('completed_at')->nullable();
-            $table->integer('score')->nullable();
+            $table->integer('hours')->nullable();
+            $table->integer('minutes')->nullable();
+            $table->integer('seconds')->nullable();
             $table->integer('attempts')->nullable();
             $table->integer('is_passed')->nullable();
             $table->integer('review_status')->nullable();

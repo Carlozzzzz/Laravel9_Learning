@@ -7,10 +7,12 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Student\QuizController as StudentQuizController;
 use App\Http\Controllers\Student\QuestionnaireController as StudentQuestionnaireController;
+use App\Http\Controllers\Student\StudentQuizDetailController;
 use App\Http\Controllers\Teacher\AnswerController;
 use App\Http\Controllers\Teacher\ChoiceController;
 use App\Http\Controllers\Teacher\QuestionnaireController;
 use App\Http\Controllers\Teacher\QuizController;
+use App\Models\StudentQuizDetails;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -124,6 +126,7 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/{question}/question', [StudentQuestionnaireController::class, 'getQuestionnaire'])->name('student.quiz.getQuestionnaire');
             Route::post('/{question}/prev', [StudentQuestionnaireController::class, 'prevOrNextQuestionnaire'])->name('student.quiz.prevQuestionnaire');
             Route::post('/{question}/next', [StudentQuestionnaireController::class, 'prevOrNextQuestionnaire'])->name('student.quiz.nextQuestionnaire');
+            Route::post('/{studentQuizDetails}/updateTimer', [StudentQuizDetailController::class, 'updateTimer'])->name('student.quizdetail.updateTimer');
         });
 
 

@@ -11,30 +11,25 @@ use Illuminate\Support\Facades\DB;
 
 class QuestionnaireController extends Controller
 {
-    // TODO** refactor this and its dependencies
-    public function viewQuestion(Quiz $quiz) {
-        $page = "student.quiz.questions";
-        $data['data_dataactivepage'] = "student_quiz_question";
-        $data['data_quiz'] = $quiz;
-        $data['quiz_id'] = $quiz->id;
-
-        return view($page, $data);
-    }
-    
     // TODO*  refactor this
     public function getQuestion(Question $question) {
         
         $page = "student.quiz.questions";
         $data = array();
 
+        $userId = auth()->user()->id;
+
         $data['data_dataactivepage'] = "student_quiz_question";
-        $data['data_currentquestion'] = $question->load(['student_question_sort_order' => function($query) {
-            $query->where('user_id', auth()->user()->id);
+        $data['data_currentquestion'] = $question->load(['student_question_sort_order' => function($query) use ($userId) {
+            $query->where('user_id', $userId);
         }]);
 
         $quiz = $question->quiz()->first();
 
-        $data['data_quiz'] = $quiz;
+        $data['data_quiz'] = $quiz->load(['student_quiz_details' => function($query) use ($userId) {
+            $query->where('user_id', $userId);
+        }]);
+
         $data['data_questions'] = Question::whereHas('student_question_sort_order', function($query) {
                         $query->where('user_id', auth()->user()->id);
                         })

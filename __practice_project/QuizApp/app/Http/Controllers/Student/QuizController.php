@@ -7,6 +7,8 @@ use App\Models\Question;
 use App\Models\Quiz;
 use App\Models\StudentQuestionAnswer;
 use App\Models\StudentQuestionSortOrder;
+use App\Models\StudentQuizDetails;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -44,11 +46,11 @@ class QuizController extends Controller
         $firstQuestion = array();
 
         $questions = $quiz->questions()->get();
-
+        $userId = auth()->user()->id;
         $randNumberArr = array();
 
         $hasQuestionOrder = StudentQuestionSortOrder::where('quiz_id', $quiz->id)
-            ->where('user_id', auth()->user()->id)
+            ->where('user_id', $userId)
             ->exists();
 
 
@@ -63,7 +65,7 @@ class QuizController extends Controller
                 } while (in_array($randomNumber, $randNumberArr));
     
                 $xarr_param = [
-                    "user_id" => auth()->user()->id,
+                    "user_id" => $userId,
                     "question_id" => $question->id,
                     "quiz_id" => $quiz->id,
                     "question_order" => $randomNumber
@@ -77,7 +79,24 @@ class QuizController extends Controller
                     $firstQuestion = $question;
                     // $data["data"]["current_question"] = $question;
                 }
+
             }
+
+            $xarr_param = array();
+            $dt = new DateTime();
+            $dt->format('Y-m-d H:i:s');
+    
+            $xarr_param = [
+                "quiz_id" => $quiz->id,
+                "user_id" => $userId,
+                "hours" => $quiz->time_limit_hr,
+                "minutes" => $quiz->time_limit_mm,
+                "seconds" => $quiz->time_limit_sec,
+                "last_question_id" => $firstQuestion->id,
+                "started_at" => $dt
+            ];
+
+            StudentQuizDetails::create($xarr_param);
         } else {
                 // $data["data"]["current_question"] = Question::whereHas('student_question_sort_order', function($query) {
                 //     $query->where('question_order', 1);

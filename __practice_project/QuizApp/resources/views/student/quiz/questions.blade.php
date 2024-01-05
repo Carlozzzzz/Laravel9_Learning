@@ -34,6 +34,8 @@
 @endsection
 
 @section('custom-script')
+<script src="{{ asset('/js/Timey.js') }}"></script>
+
 <script>
     const QuestionCategories = {
         MULTIPLE_CHOICE: 'multiple_choice',
@@ -48,9 +50,42 @@
     $(document).ready(function() {
         getQuestionnaire() 
 
-        var now = new Date().getTime();
+        console.log("{{ $data_quiz->student_quiz_details->hours}}");
+        const data_hour = parseInt("{{ isset($data_quiz->student_quiz_details->hours) ? $data_quiz->student_quiz_details->hours : 0 }}");
+        const data_mins = parseInt("{{ isset($data_quiz->student_quiz_details->minutes) ? $data_quiz->student_quiz_details->minutes : 0 }}");
+        const data_secs = parseInt("{{ isset($data_quiz->student_quiz_details->seconds) ? $data_quiz->student_quiz_details->seconds : 0  }}");
 
-        console.log(now);
+        // let now = new Date().getTime();
+        // const timey = new Timey(data_hour, data_mins, data_secs);
+        const timey = new Timey(data_hour, data_mins, data_secs);
+        let quizDetaildId = "{{ $data_quiz->student_quiz_details->id }}";
+
+        timey.startTimey(function(x) {
+
+            console.log("Ajax tester", x);
+
+            const url = `{{ route('student.quizdetail.updateTimer', ':id') }}`.replace(':id', quizDetaildId);
+            $.ajax({
+                type: "POST",
+                url: url,
+                data : x,
+                headers: {
+                    Accept: "application/json"
+                },
+                success: (response) => {
+                    console.log("Response", response);
+                },
+                error : (response) => {
+                    if(response.status === 422) {
+                        console.log(response);
+                    } else {
+                        console.log("Outside error", response);
+                    }
+                }
+            });
+        });
+
+
     });
 
     function getQuestionnaire() {

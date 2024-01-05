@@ -13,10 +13,15 @@ class StudentQuizDetails extends Model
         'quiz_id',
         'user_id',
         'score',
-        'time_start',
-        'time_end',
-        'is_completed',
+        'started_at',
+        'completed_at',
+        'hours',
+        'minutes',
+        'seconds',
+        'attempts',
         'is_passed',
+        'review_status',
+        'last_question_id',
         'duration',
     ];
 }
