@@ -106,7 +106,7 @@
                             <div class="d-flex flex-column">
                                 @foreach($data_questions as $question)
                                     <div class="question{{ $question->id }}">
-                                        <a href="" class="text-decoration-none text-secondary mb-0"><span class="text-success"><i class="bi bi-check-square-fill"></i></span> Question {{ $question->student_question_sort_order->question_order }}</a>
+                                        <a href="" class="text-decoration-none text-secondary mb-0"><span class="{{isset($question->student_quiz_answers->is_answered) && $question->student_quiz_answers->is_answered !== null ? "text-success" : "text-secondary"}}"><i class="bi bi-check-square-fill"></i></span> Question {{ $question->student_question_sort_order->question_order }}</a>
                                     </div>
                                 @endforeach
                             </div>

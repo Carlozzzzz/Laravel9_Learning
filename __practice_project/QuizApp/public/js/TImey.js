@@ -17,23 +17,22 @@ class Timey {
             let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             let seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            const quizTimerClass = document.querySelector("#quiz-timer");
-            quizTimerClass.innerHTML = hours + "h " + minutes + "m " + seconds + "s ";
-
-            const timerData = {
+            let timerData = {
                 hours : hours,
                 minutes : minutes,
                 seconds : seconds
             }
 
-            callback(timerData);
-
             if (distance < 0) {
                 clearInterval(x);
-                quizTimerClass.innerHTML = "EXPIRED";
+
+                const keys = Object.keys(timerData);
+                keys.forEach((key) => {
+                    timerData[key] = 0;
+                });
             }
 
-
+            callback(timerData);
         }, 1000);
     }
 

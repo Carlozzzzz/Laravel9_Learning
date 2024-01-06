@@ -13,24 +13,25 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('student_quiz_anwers', function (Blueprint $table) {
+        Schema::create('student_quiz_answers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')
                 ->constrained()
                 ->onUpdate('cascade')
             ->onDelete('cascade');
             $table->foreignId('question_id')
-                ->constrained()
+                ->constrained('questions')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
-            $table->foreignId('answer_id')
+            $table->foreignId('choice_id')
                 ->nullable()
                 ->constrained()
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
             $table->string('answer')->nullable(); // ** for input answers
             $table->integer('point')->nullable();
-            $table->string('is_correct')->nullable();
+            $table->integer('is_correct')->nullable();
+            $table->integer('is_answered')->nullable();
             $table->timestamps();
         });
     }

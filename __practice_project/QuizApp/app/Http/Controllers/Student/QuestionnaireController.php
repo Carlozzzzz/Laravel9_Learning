@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 class QuestionnaireController extends Controller
 {
     // TODO*  refactor this
-    public function getQuestion(Question $question) {
+    public function viewQuestion(Question $question) {
         
         $page = "student.quiz.questions";
         $data = array();
@@ -34,9 +34,11 @@ class QuestionnaireController extends Controller
                         $query->where('user_id', auth()->user()->id);
                         })
                 ->where('quiz_id', $quiz->id)
-                ->with(['student_question_sort_order'])
+                ->with(['student_question_sort_order','student_quiz_answers'])
                 ->get()
                 ->sortBy('student_question_sort_order.question_order');
+
+        // dd($data['data_questions']);
 
         return view($page, $data);
     }
@@ -49,9 +51,18 @@ class QuestionnaireController extends Controller
 
         $currrentQuestion = $question->load(['student_question_sort_order' => function($query) {
             $query->where('user_id', auth()->user()->id);
-        }, 'choices']);
+        }, 'choices', 'student_quiz_answers']);
 
+        // Updating last question id
+        $xarr_param = array();
+        $xarr_param = [
+            'last_question_id' => $currrentQuestion->id,
+            'user_id' => $currentUser->id
+        ];
+        $quiz = Quiz::with(['student_quiz_details'])->find($question->quiz_id);
+        $quiz->student_quiz_details()->update($xarr_param);
                 
+        // Get the sort order to fetch prev and next question
         $currentOrder = $currrentQuestion->student_question_sort_order->question_order;
         $prevQuestionOrder = $currentOrder - 1;
     
@@ -77,22 +88,4 @@ class QuestionnaireController extends Controller
 
         return response()->json($xdata, 200);
     }
-
-    public function prevOrNextQuestionnaire(Question $question) {
-        $xdata = array();
-
-        
-        $currrentQuestion = Question::with(['choices', 'student_question_sort_orders'])->find($question->id);
-        $nextQuestion = $question->with(['choices', 'student_question_sort_orders'])->where('id', '>', $currrentQuestion->id)->orderBy('id','asc')->first();
-        $prevQuestion = $question->with(['choices', 'student_question_sort_orders'])->where('id', '<', $currrentQuestion->id)->orderBy('id','desc')->first();
-        
-        $xdata['data']['current_questionnaire'] = $currrentQuestion;
-        $xdata['data']['prev_questionnaire'] = $prevQuestion;
-        $xdata['data']['next_questionnaire'] = $nextQuestion;
-
-        // return response()->json($xdata, 200);
-        return response()->json($xdata, 200);
-    }
-
-}
- 
+}   

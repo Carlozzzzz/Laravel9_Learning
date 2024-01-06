@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class StudentQuizDetails extends Model
 {
@@ -24,4 +25,9 @@ class StudentQuizDetails extends Model
         'last_question_id',
         'duration',
     ];
+
+    public function quiz() : BelongsTo
+    {
+        return $this->belongsTo(Quiz::class);
+    }
 }

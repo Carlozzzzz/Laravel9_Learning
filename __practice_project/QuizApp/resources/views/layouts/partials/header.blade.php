@@ -11,7 +11,7 @@
                 </a>
             </li>
             <li class="quiz-nav-item {{ isset($data_dataactivepage) && $data_dataactivepage == 'student_quiz_question' ? 'active text-white' : 'pe-none' }} px-3 py-2 px-md-4" data-target="questionContent">
-                <a href="{{ isset($quiz_id) ? route('student.quiz.questions', $quiz_id) : '' }}" class="text-decoration-none" id="quiz-question">
+                <a href="{{ isset($quiz_id) ? route('student.quiz.question', $quiz_id) : '' }}" class="text-decoration-none" id="quiz-question">
                     <span class="d-none d-md-block">Questions</span>
                     <i class="d-block d-md-none bi bi-book-fill"></i>
                 </a>

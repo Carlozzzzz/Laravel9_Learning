@@ -39,11 +39,11 @@ class QuizController extends Controller
         return view($page, $data);
     }
 
-    public function startQuiz1(Quiz $quiz) {
+    public function startQuiz(Quiz $quiz) {
 
         // $page = "student.quiz.questions";
         $data = array();
-        $firstQuestion = array();
+        $currentQuestion = array();
 
         $questions = $quiz->questions()->get();
         $userId = auth()->user()->id;
@@ -76,7 +76,7 @@ class QuizController extends Controller
                 StudentQuestionSortOrder::create($xarr_param);
                 
                 if($randomNumber == 1) {
-                    $firstQuestion = $question;
+                    $currentQuestion = $question;
                     // $data["data"]["current_question"] = $question;
                 }
 
@@ -92,7 +92,7 @@ class QuizController extends Controller
                 "hours" => $quiz->time_limit_hr,
                 "minutes" => $quiz->time_limit_mm,
                 "seconds" => $quiz->time_limit_sec,
-                "last_question_id" => $firstQuestion->id,
+                "last_question_id" => $currentQuestion->id,
                 "started_at" => $dt
             ];
 
@@ -102,52 +102,56 @@ class QuizController extends Controller
                 //     $query->where('question_order', 1);
                 // })->with(['choices', 'student_question_sort_order'])->first();
 
-                $firstQuestion = Question::whereHas('student_question_sort_order', function($query) {
-                        $query->where('question_order', '=', 1)->where('user_id', auth()->user()->id);
-                        })
-                    ->first();
+                $lastQuestionId = $quiz->student_quiz_details()->pluck('last_question_id');
+
+                // $currentQuestion = Question::whereHas('student_question_sort_order', function($query) {
+                //         $query->where('question_order', '=', 1)->where('user_id', auth()->user()->id);
+                //         })
+                //     ->first();
+
+                $currentQuestion = Question::find($lastQuestionId)->first();
         }
 
-        return redirect()->route('student.quiz.question', $firstQuestion);
+        return redirect()->route('student.quiz.question', $currentQuestion);
         // return view($page, $data);
     }
 
-    public function startQuiz(Quiz $quiz) {
+    // public function startQuiz(Quiz $quiz) {
 
-        $xdata = array();
-        $questions = $quiz->questions()->get();
-        $firstQuestion = array();
+    //     $xdata = array();
+    //     $questions = $quiz->questions()->get();
+    //     $currentQuestion = array();
 
-        $randNumberArr = array();
+    //     $randNumberArr = array();
 
-        foreach($questions as $question) {
-            // echo "Question : " . $question->id . "<br>";
-            $xarr_param = array();
-            $questionLength = count($questions);
+    //     foreach($questions as $question) {
+    //         // echo "Question : " . $question->id . "<br>";
+    //         $xarr_param = array();
+    //         $questionLength = count($questions);
 
-            do {
-                $randomNumber = rand(1,$questionLength);
-            } while (in_array($randomNumber, $randNumberArr));
+    //         do {
+    //             $randomNumber = rand(1,$questionLength);
+    //         } while (in_array($randomNumber, $randNumberArr));
 
-            $xarr_param = [
-                "question_id" => $question->id,
-                "user_id" => auth()->user()->id,
-                "question_order" => $randomNumber
-            ];
+    //         $xarr_param = [
+    //             "question_id" => $question->id,
+    //             "user_id" => auth()->user()->id,
+    //             "question_order" => $randomNumber
+    //         ];
 
-            array_push($randNumberArr, $randomNumber);
+    //         array_push($randNumberArr, $randomNumber);
 
-            $result = StudentQuestionSortOrder::create($xarr_param);
+    //         $result = StudentQuestionSortOrder::create($xarr_param);
             
-            if($randomNumber == 1) {
-                $xdata["data"]["current_question"] = $question;
-            }
-        }
+    //         if($randomNumber == 1) {
+    //             $xdata["data"]["current_question"] = $question;
+    //         }
+    //     }
 
-        $xdata["data"]["questions"] = $questions;
+    //     $xdata["data"]["questions"] = $questions;
 
-        dd($xdata["data"]["current_question"]);
-        return response()->json($xdata, 200);
-    }
+    //     dd($xdata["data"]["current_question"]);
+    //     return response()->json($xdata, 200);
+    // }
 
 }
