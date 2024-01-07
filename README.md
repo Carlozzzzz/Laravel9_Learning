@@ -3,6 +3,8 @@
 # My Main Projects
 1. [BlogPlatform] - [Repo](https://github.com/Carlozzzzz/Laravel9_Learning/tree/main/__practice_project/BlogPlatform)
    ![StudentQuizQuestion](https://github.com/Carlozzzzz/Laravel9_Learning/blob/main/__practice_project/QuizApp/demo_img/student_quiz_question.png)
+
+   
 2. [QuizApp] - [Repo](https://github.com/Carlozzzzz/Laravel9_Learning/tree/main/__practice_project/QuizApp)
 
 
