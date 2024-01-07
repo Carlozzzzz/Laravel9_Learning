@@ -15,6 +15,29 @@
    
 2. ✨ BlogPlatform - [Repo](https://github.com/Carlozzzzz/Laravel9_Learning/tree/main/__practice_project/BlogPlatform)
 
+   ![Dashboard1](https://github.com/Carlozzzzz/Laravel9_Learning/blob/main/__practice_project/BlogPlatform/demo_img/dashboard_1.png)
+
+   ![Dashboard2](https://github.com/Carlozzzzz/Laravel9_Learning/blob/main/__practice_project/BlogPlatform/demo_img/dashboard_2.png)
+
+   ![Profile](https://github.com/Carlozzzzz/Laravel9_Learning/blob/main/__practice_project/BlogPlatform/demo_img/profile.png)
+
+   ![CreatePost](https://github.com/Carlozzzzz/Laravel9_Learning/blob/main/__practice_project/BlogPlatform/demo_img/create_post.png)
+
+   ## 😎 Features
+   - Login & Registration
+   - Blog
+     - View all blogs
+     - Display minimun numbers of blogs, load more button
+     - Blog management
+     - Resuming quiz(working)
+   - Profile
+     - Update image and other details
+    
+   ## Need to update
+   - Comments section
+   - User Interface
+   - etc.
+     
 
 # My other projects
 -- will update soon
