@@ -1,7 +1,9 @@
 # Laravel9_Learning
- 
 
-# tutorial
+# My Projects
+1. [BlogPlatform] - [Repo](https://github.com/Carlozzzzz/Laravel9_Learning/tree/main/__practice_project/BlogPlatform)
+
+# Useful Tutorial
 https://www.youtube.com/watch?v=sPMtPrBR5Cc&list=PLKyjE37ORK3IUmxexDccrPbjzkfPU9Vux
 
 # Setup the Composer-laravel first
