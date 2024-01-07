@@ -17,7 +17,7 @@
 
 
 # My other projects
-
+-- will update soon
 
 # Useful Tutorial
 https://www.youtube.com/watch?v=sPMtPrBR5Cc&list=PLKyjE37ORK3IUmxexDccrPbjzkfPU9Vux
