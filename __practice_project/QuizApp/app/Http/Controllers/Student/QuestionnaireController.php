@@ -26,7 +26,7 @@ class QuestionnaireController extends Controller
 
         $quiz = $question->quiz()->first();
 
-        $data['data_quiz'] = $quiz->load(['student_quiz_details' => function($query) use ($userId) {
+        $data['data_quiz'] = $quiz->load(['latest_student_quiz_details' => function($query) use ($userId) {
             $query->where('user_id', $userId);
         }]);
 
@@ -43,15 +43,21 @@ class QuestionnaireController extends Controller
         return view($page, $data);
     }
 
-    public function getQuestionnaire(Question $question) {
+    public function getQuestionnaire(Question $question, Request $request) {
 
         $xdata = array();
         $quizId = $question->quiz_id;
+        $quiz = Quiz::with(['latest_student_quiz_details'])->find($question->quiz_id);
+        $latestQuizDetailsId = $quiz->latest_student_quiz_details->id;
         $currentUser = auth()->user();
+        
 
         $currrentQuestion = $question->load(['student_question_sort_order' => function($query) {
             $query->where('user_id', auth()->user()->id);
-        }, 'choices', 'student_quiz_answers']);
+        }, 'choices', 'student_quiz_answers' => function($query) use($latestQuizDetailsId) {
+            $query->where("student_quiz_details_id", $latestQuizDetailsId);
+        }]);
+
 
         // Updating last question id
         $xarr_param = array();
@@ -59,21 +65,21 @@ class QuestionnaireController extends Controller
             'last_question_id' => $currrentQuestion->id,
             'user_id' => $currentUser->id
         ];
-        $quiz = Quiz::with(['student_quiz_details'])->find($question->quiz_id);
+
         $quiz->student_quiz_details()->update($xarr_param);
                 
         // Get the sort order to fetch prev and next question
         $currentOrder = $currrentQuestion->student_question_sort_order->question_order;
         $prevQuestionOrder = $currentOrder - 1;
     
-        $prevQuestion = $nextQuestion = Question::whereHas('student_question_sort_order', function($query) use ($currentUser, $prevQuestionOrder) {
+        $prevQuestion = Question::whereHas('student_question_sort_order', function($query) use ($currentUser, $prevQuestionOrder) {
             $query->where('user_id', $currentUser->id)
                 ->where('question_order', $prevQuestionOrder);
         })->with('choices')->first();
 
         $nextQuestionOrder = $currentOrder + 1;
 
-        $nextQuestion = $nextQuestion = Question::whereHas('student_question_sort_order', function($query) use ($currentUser, $nextQuestionOrder) {
+        $nextQuestion = Question::whereHas('student_question_sort_order', function($query) use ($currentUser, $nextQuestionOrder) {
             $query->where('user_id', $currentUser->id)
                 ->where('question_order', $nextQuestionOrder);
         })->with('choices')->first();
@@ -85,6 +91,7 @@ class QuestionnaireController extends Controller
         $xdata['data']['quiz'] = Quiz::with(['questions'])
                 ->where('id', $quizId)
                 ->first();
+
 
         return response()->json($xdata, 200);
     }

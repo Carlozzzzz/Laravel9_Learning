@@ -40,9 +40,9 @@ class Question extends Model
 
     public function student_quiz_answers() : HasOne
     {
-        return $this->HasOne(StudentQuizAnswer::class);
+        return $this->HasOne(StudentQuizAnswer::class)
+            ->where("user_id", auth()->user()->id);
     }
-
    
 
 }

@@ -43,7 +43,7 @@
                             <p class="mb-0"><span class="me-1">Points :</span> {{$data_datarecordfile->points}} pts. each</p>
                         </div>
                         <div class="assignmentContent">
-                            <p class="mb-0"><span class="me-1">Max score :</span> (question * points)</p>
+                            <p class="mb-0"><span class="me-1">Max score :</span> {{ $data_totalQuizPoints ?? null}}</p>
                         </div>
                         <div class="assignmentContent">
                             <p class="mb-0"><span class="me-1">Start :</span> {{$data_datarecordfile->start_date}}</p>
@@ -52,7 +52,7 @@
                             <p class="mb-0"><span class="me-1">End : </span>{{ $data_datarecordfile->start_date }}</p>
                         </div>
                         <div class="assignmentContent">
-                            <p class="mb-0"><span class="me-1">Timer :</span> {{ $data_datarecordfile->time_limit_hr }}:{{ $data_datarecordfile->time_limit_mm }}:{{ $data_datarecordfile->time_limit_sec }} (hh/mm/sec)</p>
+                            <p class="mb-0"><span class="me-1">Timer :</span> {{ $data_datarecordfile->time_limit_hr }}h {{ $data_datarecordfile->time_limit_mm }}m {{ $data_datarecordfile->time_limit_sec }}s</p>
                         </div>
                         <div class="assignmentContent">
                             <p class="mb-0">No more submission allowed.</p>
@@ -62,8 +62,16 @@
 
                 <div class="scoreContainer card mb-3">
                     <div class="card-body">
-                        <h6>Score</h6>
-                        <p class="mb-0">Waiting for your grade.</p>
+                        <h6 class="">
+                            Score
+                        </h6>
+                        <span class="fw-none">
+                            @if(isset($data_studentQuizScore) && $data_studentQuizScore != null)
+                                {{ $data_studentQuizScore }} / {{ $data_totalQuizPoints ?? "Null" }}
+                            @else
+                                Waiting for grade.
+                            @endif
+                        </span>
                     </div>
                 </div>
     
@@ -72,7 +80,7 @@
                         <h6>Submission</h6>
                         {{-- or past due --}}
                         <p class="mb-0">Not yet submitted</p>
-                        <p class="mb-0"><span class="me-1">Attempts :</span> 0</p>
+                        <p class="mb-0"><span class="me-1">Attempts :</span> {{ $data_studentAttempts }}</p>
                         <p class="mb-0"><span class="me-1">Max Attempts :</span> {{ $data_datarecordfile->attempts}}</p>
                         <p class="mb-0"><span class="me-1">Allow late submission :</span> No {{-- icon --}} </p>
                     </div>

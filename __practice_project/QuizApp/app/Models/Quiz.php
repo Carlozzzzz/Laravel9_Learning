@@ -43,9 +43,16 @@ class Quiz extends Model
         return $this->hasMany(Question::class);
     }
 
-    public function student_quiz_details(): HasOne
+    // FIX ME ****
+    public function student_quiz_details(): HasMany
     {
-        return $this->hasOne(StudentQuizDetails::class);
+        return $this->hasMany(StudentQuizDetails::class)->where('user_id' , auth()->user()->id);
+    }
+
+    // FIX ME ****
+    public function latest_student_quiz_details() : hasOne
+    {
+        return $this->hasOne(StudentQuizDetails::class)->where('user_id' , auth()->user()->id)->latest()->take(1);
     }
 
 }

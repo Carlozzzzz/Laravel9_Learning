@@ -6,17 +6,20 @@ use App\Http\Controllers\Controller;
 use App\Models\Question;
 use App\Models\Quiz;
 use App\Models\StudentQuizAnswer;
+use App\Models\StudentQuizDetails;
 use Illuminate\Http\Request;
 
 class QuizAnswerController extends Controller
 {
-    public function store(Request $request) {
+    public function store(StudentQuizDetails $studentQuizDetails, Request $request) {
+
         $xdata = array();
         $userId = auth()->user()->id;
-        
+
         $validated = $request->validate([
             'question_id' => 'integer',
             'choice_id' => 'integer',
+            'isFinished' => 'required|in:true,false',
         ]);
 
         $validated['user_id'] = $userId;
@@ -33,10 +36,19 @@ class QuizAnswerController extends Controller
             'user_id' => $userId
         ];
 
-        StudentQuizAnswer::updateOrCreate($xarr_param, $validated);
-        
+        // dd($validated, $request->all());
+
+        // StudentQuizAnswer::updateOrCreate($xarr_param, $validated);
+        $studentQuizDetails->student_quiz_answer()->updateOrCreate($xarr_param, $validated);
+
+        if($validated["isFinished"] == "true") {
+            $studentQuizDetails->update(['review_status' => "finished"]);
+        }
+
         $xdata['message'] = "Answer has been successfully submitted.";
 
         return response()->json($xdata);
     }
+
+    
 }

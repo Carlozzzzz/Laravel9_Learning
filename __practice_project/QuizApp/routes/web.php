@@ -9,6 +9,7 @@ use App\Http\Controllers\Student\QuizController as StudentQuizController;
 use App\Http\Controllers\Student\QuestionnaireController as StudentQuestionnaireController;
 use App\Http\Controllers\Student\QuizAnswerController;
 use App\Http\Controllers\Student\StudentQuizDetailController;
+use App\Http\Controllers\Student\StudentQuizResultController;
 use App\Http\Controllers\Teacher\AnswerController;
 use App\Http\Controllers\Teacher\ChoiceController;
 use App\Http\Controllers\Teacher\QuestionnaireController;
@@ -117,13 +118,19 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{quiz}/view', [StudentQuizController::class, 'view'])->name('student.quiz.view');
             
             Route::get('/{quiz}/startQuiz', [StudentQuizController::class, 'startQuiz'])->name('student.quiz.startQuiz');
+            Route::get('/{quiz}/resumeQuiz', [StudentQuizController::class, 'resumeQuiz'])->name('student.quiz.resumeQuiz');
+            Route::get('/{quiz}/reattemptQuiz', [StudentQuizController::class, 'reattemptQuiz'])->name('student.quiz.reattemptQuiz');
             
             Route::get('/{question}/question', [StudentQuestionnaireController::class, 'viewQuestion'])->name('student.quiz.question');
             Route::post('/{question}/question', [StudentQuestionnaireController::class, 'getQuestionnaire'])->name('student.quiz.getQuestionnaire');
             
             Route::post('/{studentQuizDetails}/updateTimer', [StudentQuizDetailController::class, 'updateTimer'])->name('student.quizdetail.updateTimer');
+            Route::post('/{studentQuizDetails}/createResult', [StudentQuizDetailController::class, 'createResult'])->name('student.quizdetail.createResult');
+
+            Route::get('/{studentQuizDetails}/result', [StudentQuizResultController::class, 'result'])->name('student.quizresult.result');
            
-            Route::post('/store', [QuizAnswerController::class, 'store'])->name('student.quizAnswer.store');
+            // Route::post('/store', [QuizAnswerController::class, 'store'])->name('student.quizAnswer.store');
+            Route::post('/{studentQuizDetails}/store', [QuizAnswerController::class, 'store'])->name('student.quizAnswer.store');
         });
     });
 

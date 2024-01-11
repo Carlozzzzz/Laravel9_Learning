@@ -29,8 +29,10 @@ return new class extends Migration
             $table->integer('minutes')->nullable();
             $table->integer('seconds')->nullable();
             $table->integer('attempts')->nullable();
+            $table->integer('score')->nullable();
+            $table->integer('total_points')->nullable();
             $table->integer('is_passed')->nullable();
-            $table->integer('review_status')->nullable();
+            $table->string('review_status')->nullable();
             $table->integer('last_question_id')->nullable();
             $table->timestamps();
         });

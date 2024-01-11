@@ -45,6 +45,8 @@
         IDENTIFICATION: 'identification'
     };
 
+    const quizDetaildId = "{{ $data_quiz->latest_student_quiz_details->id }}";
+
     let questionnaireArr = [];
     
     $(document).ready(function() {
@@ -55,20 +57,16 @@
             submitQuestion();
         });
 
-        console.log($('#questionnaire-container #answerForm'));
-
-        const data_hour = parseInt("{{ isset($data_quiz->student_quiz_details->hours) ? $data_quiz->student_quiz_details->hours : 0 }}");
-        const data_mins = parseInt("{{ isset($data_quiz->student_quiz_details->minutes) ? $data_quiz->student_quiz_details->minutes : 0 }}");
-        const data_secs = parseInt("{{ isset($data_quiz->student_quiz_details->seconds) ? $data_quiz->student_quiz_details->seconds : 0  }}");
+        const data_hour = parseInt("{{ isset($data_quiz->latest_student_quiz_details->hours) ? $data_quiz->latest_student_quiz_details->hours : 0 }}");
+        const data_mins = parseInt("{{ isset($data_quiz->latest_student_quiz_details->minutes) ? $data_quiz->latest_student_quiz_details->minutes : 0 }}");
+        const data_secs = parseInt("{{ isset($data_quiz->latest_student_quiz_details->seconds) ? $data_quiz->latest_student_quiz_details->seconds : 0  }}");
 
         // let now = new Date().getTime();
         // const timey = new Timey(data_hour, data_mins, data_secs);
         const timey = new Timey(data_hour, data_mins, data_secs);
-        let quizDetaildId = "{{ $data_quiz->student_quiz_details->id }}";
 
         timey.startTimey(function(data) {
-
-
+            return;
             const url = `{{ route('student.quizdetail.updateTimer', ':id') }}`.replace(':id', quizDetaildId);
             
             $.ajax({
@@ -110,68 +108,174 @@
             });
         });
 
-    });
 
+    });
     function getQuestionnaire() {
         console.log("Running getquestionnaire..");
 
-        const questionId = "{{ isset($data_currentquestion) ? optional($data_currentquestion)->id : '' }}";
+        const questionId = "{{ isset($data_currentquestion->id) ? $data_currentquestion->id : '' }}";
 
-        if (!questionId) {
-            return;
+        if (questionId) {
+            const url = `{{ route('student.quiz.getQuestionnaire', ':id') }}`.replace(':id', questionId);
+            
+            $.ajax({
+                type: "POST",
+                url: url,
+                headers: {
+                    Accept: "application/json"
+                },
+                success: (response) => {
+
+                    questionnaireArr.push(response.data);
+
+                    const questionnaire = createOutputHTML(response.data);
+
+                    $('#questionnaire-container').append(questionnaire);
+                },
+                error: (response) => {
+                    if(response.status === 422) {
+                        console.log(response);
+                    }
+                }
+            })
         }
 
-        const url = `{{ route('student.quiz.getQuestionnaire', ':id') }}`.replace(':id', questionId);
-
-        $.ajax({
-            type: "POST",
-            url: url,
-            headers: {
-                Accept: "application/json"
-            },
-            success: (response) => {
-
-                questionnaireArr.push(response.data);
-
-                const questionnaire = createOutputHTML(response.data);
-
-                $('#questionnaire-container').append(questionnaire);
-            },
-            error: (response) => {
-                if(response.status === 422) {
-                    console.log(response);
-                }
-            }
-        })
     }
 
     // working
     function submitQuestion(redirectPage = "", isFinished = false) {
 
-        const url = `{{ route('student.quizAnswer.store') }}`;
-        const formData = $('#questionnaire-container #answerForm').serializeArray();
+        let storeQuizAnswerURL = `{{ route('student.quizAnswer.store', ":id") }}`;
+        storeQuizAnswerURL = storeQuizAnswerURL.replace(':id', quizDetaildId);
+        let formData = $('#questionnaire-container #answerForm').serialize();
+        formData += '&isFinished=' + isFinished;
 
-        console.log(formData);
-        $.ajax({
-            type: "POST",
-            url: url,
-            header: {
-                Accept: "application/json"
-            },
-            data: formData,
-            success: (response) => {
-                console.log("isFinished", isFinished);
-                return;
-                window.location.href = redirectPage;
-            },
-            error: (response) => {
-                if(response.status === 422) {
-                    console.log("Error", response);
-                } else {
-                    console.log("other error")
+        function ajaxSubmitAnswer() {
+            $.ajax({
+                type: "POST",
+                url: storeQuizAnswerURL,
+                header: {
+                    Accept: "application/json"
+                },
+                data: formData,
+                success: (response) => {
+
+                    if(isFinished) {
+                        let timerInterval;
+                        Swal.fire({
+                            title: "Please wait",
+                            html: "Generating the results ...",
+                            timer: 1000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                ajaxCreateResult();
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                            }
+                        }).then((result) => {
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                console.log("I was closed by the timer");
+                            }
+                        });
+                    } else {
+                        let timerInterval;
+                        Swal.fire({
+                            title: "Please wait",
+                            html: "Preparing question ...",
+                            timer: 500,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                ajaxCreateResult();
+                            },
+                            // willClose: () => {
+                            //     clearInterval(timerInterval);
+                            // }
+                        }).then((result) => {
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                console.log("I was closed by the timer");
+                            }
+                        });
+                        window.location.href = redirectPage;
+                    }
+                },
+                error: (response) => {
+                    if(response.status === 422) {
+                        console.log("Error", response);
+                    } else {
+                        console.log("other error")
+                    }
                 }
-            }
-        });
+            });
+        }
+
+        let createResultURL = '{{ route("student.quizdetail.createResult", ":id") }}';
+        createResultURL = createResultURL.replace(':id', quizDetaildId);
+
+        function ajaxCreateResult() {
+            $.ajax({
+                type: "POST",
+                url: createResultURL,
+                header: {
+                    Accept: "application/json"
+                },
+                success: (response) => {
+
+                    console.log("Result has been generated...");
+
+                    if(isFinished) {
+                        Swal.fire({
+                            title: "Please wait",
+                            html: response.message,
+                            timer: 1000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                window.location.href = redirectPage;
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                            }
+                        }).then((result) => {
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                console.log("I was closed by the timer");
+                            }
+                        });
+
+                    } else {
+                        console.log("Inside quiz questions...");
+                    }
+                },
+                error: (response) => {
+                    if(response.status === 422) {
+                        console.log("Error", response);
+                    } else {
+                        console.log("other error")
+                    }
+                }
+            });
+        }
+
+        if(isFinished) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You will be redirected to result page.",
+                icon: 'warning',
+                allowOutsideClick: false,
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, submit!',
+            }).then((result) => {
+                if(result.value) {
+                    ajaxSubmitAnswer();
+                }
+            });
+        } else {
+            ajaxSubmitAnswer();
+        }
     }
 
     function createOutputHTML(questionObj){
@@ -184,6 +288,7 @@
                 let prevQuestionnaireUrl = '{{ route("student.quiz.getQuestionnaire", ":id") }}';
                 const prevQuestionId = questionObj.prev_questionnaire.id;
                 prevQuestionnaireUrl = prevQuestionnaireUrl.replace(':id', questionObj.prev_questionnaire.id);
+                
 
                 // buttons += `<a href="${prevQuestionnaireUrl}" class="btn btn-primary me-auto"><< Prev</a>`;
                 buttons += `<button type="button" onclick="submitQuestion('${prevQuestionnaireUrl}')" class="btn btn-primary me-auto"><< Prev</button>`;
@@ -195,14 +300,13 @@
                 nextQuestionnaireUrl = nextQuestionnaireUrl.replace(':id', nextQuestionId);
 
                 // buttons += `<a href="${nextQuestionnaireUrl}" class="btn btn-primary ms-auto">Next >></a>`;
-                buttons += `<button type="button" onclick="submitQuestion('${nextQuestionnaireUrl}')" class="btn btn-primary  ms-auto">Next >></button>`;
+                buttons += `<button type="button" onclick="submitQuestion('${nextQuestionnaireUrl}', false)" class="btn btn-primary  ms-auto">Next >></button>`;
             }
 
             if(!questionObj.next_questionnaire) {
-                let currentQuestionnaireUrl = '{{ route("student.quiz.getQuestionnaire", ":id") }}';
-                const currentQuestionId = questionObj.current_questionnaire.id;
-                currentQuestionnaireUrl = currentQuestionnaireUrl.replace(':id', currentQuestionId);
-                buttons += `<button type="button" onclick="submitQuestion('${currentQuestionnaireUrl}', true)" class="btn btn-primary  ms-auto">Finished</button>`;
+                let createResultURL = '{{ route("student.quizresult.result", ":id") }}';
+                createResultURL = createResultURL.replace(':id', quizDetaildId);
+                buttons += `<button type="button" onclick="submitQuestion('${createResultURL}', true)" class="btn btn-primary  ms-auto">Finished</button>`;
             }
 
             let html = `
@@ -221,7 +325,8 @@
 
         if(questionCategory == QuestionCategories.MULTIPLE_CHOICE || questionCategory == QuestionCategories.TRUE_OR_FALSE) {
             const choices = questionObj.current_questionnaire.choices;
-            const userAnswer = questionObj.current_questionnaire.student_quiz_answers.choice_id;
+
+            const userAnswer = (questionObj.current_questionnaire.student_quiz_answers ?? {}).choice_id ?? false;
 
             choiceHTML = choices.map((choice, choiceIndex) => {
                 const indexCharacter = indexToAlpha(choiceIndex);
@@ -278,5 +383,6 @@
         };
         return numberToCharacter(num);
     };
+    
 </script>
 @endsection
