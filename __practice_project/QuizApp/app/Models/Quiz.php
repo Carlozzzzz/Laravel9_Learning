@@ -27,6 +27,7 @@ class Quiz extends Model
         'end_date',
         'feedback_timing',
         'allow_answer_review',
+        'allow_late',
         'show_result_after_submission',
         'randomize_choices',
         'randomize_question',

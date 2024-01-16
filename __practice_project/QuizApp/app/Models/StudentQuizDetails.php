@@ -13,8 +13,8 @@ class StudentQuizDetails extends Model
     use HasFactory;
 
     protected $fillable = [
-        'quiz_id',
         'user_id',
+        'quiz_id',
         'score',
         'started_at',
         'completed_at',
@@ -27,7 +27,6 @@ class StudentQuizDetails extends Model
         'is_passed',
         'review_status',
         'last_question_id',
-        'duration',
     ];
 
     public function quiz() : BelongsTo

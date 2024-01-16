@@ -45,7 +45,6 @@
                 </div>
                 <div class="result-buttons">
                     <a href="${quizURL}" class="btn btn-primary"><i class="bi bi-arrow-return-left"></i> Back to Overview</a>    
-                    <button class="btn btn-success"><i class="bi bi-arrow-clockwise"></i> Re-attempt</a>    
                 </div>
             </div>
         `;

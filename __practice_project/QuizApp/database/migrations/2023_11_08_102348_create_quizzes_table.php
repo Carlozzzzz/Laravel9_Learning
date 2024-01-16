@@ -32,6 +32,7 @@ return new class extends Migration
             $table->dateTime('end_date')->nullable();
             $table->string('feedback_timing')->nullable();
             $table->integer('allow_answer_review')->nullable();
+            $table->integer('allow_late')->nullable();
             $table->integer('show_result_after_submission')->nullable();
             $table->integer('randomize_choices')->nullable();
             $table->integer('randomize_question')->nullable();

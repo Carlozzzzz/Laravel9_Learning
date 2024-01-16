@@ -35,7 +35,9 @@ class Question extends Model
 
     public function student_question_sort_order() : HasOne
     {
-        return $this->HasOne(StudentQuestionSortOrder::class);
+        return $this->HasOne(StudentQuestionSortOrder::class)
+            ->where("user_id", auth()->user()->id)
+            ->orderBy('question_order');
     }
 
     public function student_quiz_answers() : HasOne

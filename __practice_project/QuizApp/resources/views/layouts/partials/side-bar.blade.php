@@ -46,16 +46,18 @@
                             <p class="mb-0"><span class="me-1">Max score :</span> {{ $data_totalQuizPoints ?? null}}</p>
                         </div>
                         <div class="assignmentContent">
-                            <p class="mb-0"><span class="me-1">Start :</span> {{$data_datarecordfile->start_date}}</p>
+                            <p class="mb-0"><span class="me-1">Start :</span> {{$data_startDate}}</p>
                         </div>
                         <div class="assignmentContent">
-                            <p class="mb-0"><span class="me-1">End : </span>{{ $data_datarecordfile->start_date }}</p>
+                            <p class="mb-0"><span class="me-1">End : </span>{{ $data_endDate }}</p>
                         </div>
                         <div class="assignmentContent">
                             <p class="mb-0"><span class="me-1">Timer :</span> {{ $data_datarecordfile->time_limit_hr }}h {{ $data_datarecordfile->time_limit_mm }}m {{ $data_datarecordfile->time_limit_sec }}s</p>
                         </div>
                         <div class="assignmentContent">
-                            <p class="mb-0">No more submission allowed.</p>
+                            @if ($data_isMaxAttemptReach && $data_isQuizOpen)
+                                <p class="mb-0">No more submission allowed.</p>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -79,14 +81,18 @@
                     <div class="card-body">
                         <h6>Submission</h6>
                         {{-- or past due --}}
-                        <p class="mb-0">Not yet submitted</p>
+                        @if ($data_hasResults)
+                            <p class="mb-0">Submitted</p>
+                        @else
+                            <p class="mb-0">Not yet submitted</p>
+                        @endif
                         <p class="mb-0"><span class="me-1">Attempts :</span> {{ $data_studentAttempts }}</p>
                         <p class="mb-0"><span class="me-1">Max Attempts :</span> {{ $data_datarecordfile->attempts}}</p>
-                        <p class="mb-0"><span class="me-1">Allow late submission :</span> No {{-- icon --}} </p>
+                        <p class="mb-0"><span class="me-1">Allow late submission :</span> {{ $data_datarecordfile->allow_late ? "Yes" : "No" }} {{-- icon --}} </p>
                     </div>
                 </div>
     
-                <div class="commentContainer card">
+                <div class="commentContainer card ">
                     <div class="card-body">
                         <h6>Comment</h6>
                         <form action="">
@@ -112,9 +118,12 @@
                     <div class="card-body">
                         <div class="card-body p-0">
                             <div class="d-flex flex-column">
-                                @foreach($data_questions as $question)
-                                    <div class="question{{ $question->id }}">
-                                        <a href="" class="text-decoration-none text-secondary mb-0"><span class="{{isset($question->student_quiz_answers->is_answered) && $question->student_quiz_answers->is_answered !== null ? "text-success" : "text-secondary"}}"><i class="bi bi-check-square-fill"></i></span> Question {{ $question->student_question_sort_order->question_order }}</a>
+                                @foreach($data_questionsSortOrder as $sortOrder)
+                                    <div class="question{{ $sortOrder->question->id }}">
+                                        {{-- @php 
+                                            echo "<br><br>Question : " .$question->id . " => " . $question->student_question_sort_order->question_order . "<br>";
+                                        @endphp --}}
+                                        <a href="" class="text-decoration-none text-secondary mb-0"><span class="{{isset($sortOrder->question->student_quiz_answers->is_answered) && $sortOrder->question->student_quiz_answers->is_answered !== null ? "text-success" : "text-secondary"}}"><i class="bi bi-check-square-fill"></i></span> Question {{ $sortOrder->question_order }}</a>
                                     </div>
                                 @endforeach
                             </div>

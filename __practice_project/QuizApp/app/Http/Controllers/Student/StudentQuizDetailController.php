@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Student;
 use App\Http\Controllers\Controller;
 use App\Models\StudentQuizAnswer;
 use App\Models\StudentQuizDetails;
+use DateTime;
 use Illuminate\Http\Request;
 
 class StudentQuizDetailController extends Controller
@@ -85,7 +86,19 @@ class StudentQuizDetailController extends Controller
                 }
             }
 
-            $studentQuizDetails->update(['score' => $score, 'total_points' => $total_points]);
+            $dt = new DateTime();
+            $dt->format('Y-m-d H:i:s');
+
+            $xarr_param = array();
+            $xarr_param = [
+                'review_status' => "finished",
+                'completed_at' => $dt,
+                'score' => $score,
+                'total_points' => $total_points
+            ];
+
+            $studentQuizDetails->update($xarr_param);
+
         }
 
         $xdata['message'] = "Results has been generated.";

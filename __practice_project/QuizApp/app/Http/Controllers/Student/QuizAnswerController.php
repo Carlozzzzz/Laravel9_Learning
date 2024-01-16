@@ -3,9 +3,6 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
-use App\Models\Question;
-use App\Models\Quiz;
-use App\Models\StudentQuizAnswer;
 use App\Models\StudentQuizDetails;
 use Illuminate\Http\Request;
 
@@ -18,8 +15,7 @@ class QuizAnswerController extends Controller
 
         $validated = $request->validate([
             'question_id' => 'integer',
-            'choice_id' => 'integer',
-            'isFinished' => 'required|in:true,false',
+            'choice_id' => 'integer'
         ]);
 
         $validated['user_id'] = $userId;
@@ -40,10 +36,6 @@ class QuizAnswerController extends Controller
 
         // StudentQuizAnswer::updateOrCreate($xarr_param, $validated);
         $studentQuizDetails->student_quiz_answer()->updateOrCreate($xarr_param, $validated);
-
-        if($validated["isFinished"] == "true") {
-            $studentQuizDetails->update(['review_status' => "finished"]);
-        }
 
         $xdata['message'] = "Answer has been successfully submitted.";
 

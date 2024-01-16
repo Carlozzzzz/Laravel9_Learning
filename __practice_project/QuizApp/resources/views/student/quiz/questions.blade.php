@@ -144,13 +144,12 @@
 
     // working
     function submitQuestion(redirectPage = "", isFinished = false) {
-
-        let storeQuizAnswerURL = `{{ route('student.quizAnswer.store', ":id") }}`;
-        storeQuizAnswerURL = storeQuizAnswerURL.replace(':id', quizDetaildId);
-        let formData = $('#questionnaire-container #answerForm').serialize();
-        formData += '&isFinished=' + isFinished;
-
+        
         function ajaxSubmitAnswer() {
+            let storeQuizAnswerURL = `{{ route('student.quizAnswer.store', ":id") }}`;
+            storeQuizAnswerURL = storeQuizAnswerURL.replace(':id', quizDetaildId);
+            let formData = $('#questionnaire-container #answerForm').serialize();
+            // formData += '&isFinished=' + isFinished;
             $.ajax({
                 type: "POST",
                 url: storeQuizAnswerURL,
@@ -176,7 +175,7 @@
                             }
                         }).then((result) => {
                             if (result.dismiss === Swal.DismissReason.timer) {
-                                console.log("I was closed by the timer");
+                                window.location.href = redirectPage;
                             }
                         });
                     } else {
@@ -188,17 +187,12 @@
                             timerProgressBar: true,
                             didOpen: () => {
                                 Swal.showLoading();
-                                ajaxCreateResult();
-                            },
-                            // willClose: () => {
-                            //     clearInterval(timerInterval);
-                            // }
+                            }
                         }).then((result) => {
                             if (result.dismiss === Swal.DismissReason.timer) {
-                                console.log("I was closed by the timer");
+                                window.location.href = redirectPage;
                             }
                         });
-                        window.location.href = redirectPage;
                     }
                 },
                 error: (response) => {
@@ -211,10 +205,10 @@
             });
         }
 
-        let createResultURL = '{{ route("student.quizdetail.createResult", ":id") }}';
-        createResultURL = createResultURL.replace(':id', quizDetaildId);
-
+        
         function ajaxCreateResult() {
+            let createResultURL = '{{ route("student.quizdetail.createResult", ":id") }}';
+            createResultURL = createResultURL.replace(':id', quizDetaildId);
             $.ajax({
                 type: "POST",
                 url: createResultURL,
@@ -274,6 +268,7 @@
                 }
             });
         } else {
+            // automatically submit when not finished on answering
             ajaxSubmitAnswer();
         }
     }

@@ -4,7 +4,10 @@
 @if (auth()->user()->user_type == "student" && isset($data_dataactivepage))
     <div class="quiz-nav shadow-sm flex-grow-1 bg-light d-flex align-items-end h-100 px-2 px-lg-4" id="quizNav">
         <ul class="nav">
-            <li class="quiz-nav-item {{ isset($data_dataactivepage) && $data_dataactivepage == 'student_quiz_view' ? 'active' : '' }} px-3 py-2 px-md-4" data-target="quizviewContent">
+            <li class="quiz-nav-item 
+                {{ isset($data_dataactivepage) && $data_dataactivepage == 'student_quiz_view' ? 'active' : 'pe-none' }} px-3 py-2 px-md-4" 
+                data-target="quizviewContent">
+                
                 <a href="{{ isset($quiz_id) ? route('student.quiz.view', $quiz_id) : '' }}" class="text-decoration-none">
                     <span class="d-none d-md-block">Overview</span>
                     <i class="d-block d-md-none bi bi-info-square"></i>
