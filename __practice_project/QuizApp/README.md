@@ -10,14 +10,16 @@
      - Dynamic creation of questions
      - Resuming quiz(working)
 
+    ## :wrench: Setup
+        basic laravel installation
+        
+            
     ## :running: Run the APP
         -- npm run dev
         -- php artisan serve
    
-    ## Color hunt
+    ## :briefcase: Resources
             -- https://colorhunt.co/palette/fffbf5f7efe5c3acd07743db
     
     
-    ## Composer
-            composer require realrashid/sweet-alert
-            composer require barryvdh/laravel-debugbar
+   
