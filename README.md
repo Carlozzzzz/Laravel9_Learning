@@ -17,12 +17,6 @@
 
    ![Dashboard1](https://github.com/Carlozzzzz/Laravel9_Learning/blob/main/__practice_project/BlogPlatform/demo_img/dashboard_1.png)
 
-   ![Dashboard2](https://github.com/Carlozzzzz/Laravel9_Learning/blob/main/__practice_project/BlogPlatform/demo_img/dashboard_2.png)
-
-   ![Profile](https://github.com/Carlozzzzz/Laravel9_Learning/blob/main/__practice_project/BlogPlatform/demo_img/profile.png)
-
-   ![CreatePost](https://github.com/Carlozzzzz/Laravel9_Learning/blob/main/__practice_project/BlogPlatform/demo_img/create_post.png)
-
    ## 😎 Features
    - Login & Registration
    - Blog
