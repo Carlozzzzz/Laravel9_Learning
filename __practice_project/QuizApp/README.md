@@ -11,7 +11,8 @@
      - Resuming quiz(working)
 
     ## :wrench: Setup
-        basic laravel installation
+       basic laravel installation
+       -- php artisan migrate
         
             
     ## :running: Run the APP
