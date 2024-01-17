@@ -1,5 +1,5 @@
 # ✨ PracticeEloquent_Basics
-![Loginpage][https://github.com/Carlozzzzz/Laravel9_Learning/blob/main/__practice_laravel_eloquent/PracticeEloquent_Basics/resources/image_github/loginpage.png]
+![StudentQuizQuestion](https://github.com/Carlozzzzz/Laravel9_Learning/blob/main/__practice_project/QuizApp/demo_img/student_quiz_question.png)
 
 ## 🔧 Installations Links
     -- [Laravel Breeze] - (https://laravel.com/docs/10.x/starter-kits)
