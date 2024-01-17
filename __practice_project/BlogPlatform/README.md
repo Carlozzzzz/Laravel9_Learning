@@ -1,3 +1,14 @@
+# ✨ BlogPlatform - [Repo](https://github.com/Carlozzzzz/Laravel9_Learning/tree/main/__practice_project/BlogPlatform)
+
+   ![Dashboard1](https://github.com/Carlozzzzz/Laravel9_Learning/blob/main/__practice_project/BlogPlatform/demo_img/dashboard_1.png)
+
+   ![Dashboard2](https://github.com/Carlozzzzz/Laravel9_Learning/blob/main/__practice_project/BlogPlatform/demo_img/dashboard_2.png)
+
+   ![Profile](https://github.com/Carlozzzzz/Laravel9_Learning/blob/main/__practice_project/BlogPlatform/demo_img/profile.png)
+
+   ![CreatePost](https://github.com/Carlozzzzz/Laravel9_Learning/blob/main/__practice_project/BlogPlatform/demo_img/create_post.png)
+
+
 ## Install Laravel
     -- cd parent directory
     -- laravel new sample_with_boostrap
