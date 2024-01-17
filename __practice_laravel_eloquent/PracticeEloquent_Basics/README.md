@@ -9,8 +9,6 @@
     -- npm run dev
 
 ## 👦 Login account
-    -- # carlosromulomaralit@gmail.com
-    -- # password
     
        # Account #
        * username  :  carlosromulomaralit@gmail.com
