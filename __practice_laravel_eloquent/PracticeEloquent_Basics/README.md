@@ -8,7 +8,7 @@
     -- php artisan serve
     -- npm run dev
 
-## 👦 Login account
+## 🌐 Login account
     
        # Account #
        * username  :  carlosromulomaralit@gmail.com
