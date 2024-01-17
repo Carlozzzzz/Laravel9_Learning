@@ -1,12 +1,12 @@
-# PracticeEloquent_Basics
+# ✨ PracticeEloquent_Basics
 
-## Installations Links
+## 🔧 Installations Links
     -- [Laravel Breeze] - (https://laravel.com/docs/10.x/starter-kits)
 
-## Run the System
+## 🚀 Run the System
     -- php artisan serve
     -- npm run dev
-    
-## Login account
+
+## 👦 Login account
     -- # carlosromulomaralit@gmail.com
     -- # password
