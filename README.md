@@ -51,7 +51,7 @@ https://www.youtube.com/watch?v=sPMtPrBR5Cc&list=PLKyjE37ORK3IUmxexDccrPbjzkfPU9
 
 
 
-# Usefull commans
+# Usefull commands
     
         *finding file
             -- ctrl + p
