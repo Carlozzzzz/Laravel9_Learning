@@ -12,15 +12,15 @@
 
     ## :wrench: Setup
        basic laravel installation
-       -- php artisan migrate
+       php artisan migrate --seed
         
             
     ## :running: Run the APP
-        -- npm run dev
-        -- php artisan serve
+        npm run dev
+        php artisan serve
    
     ## :briefcase: Resources
-            -- https://colorhunt.co/palette/fffbf5f7efe5c3acd07743db
+            https://colorhunt.co/palette/fffbf5f7efe5c3acd07743db
     
     
    
