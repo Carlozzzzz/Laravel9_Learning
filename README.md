@@ -1,7 +1,7 @@
 # Laravel9_Learning
 
 # My Main Projects
-1. ✨ QuizApp - [Repo](https://github.com/Carlozzzzz/Laravel9_Learning/tree/main/__practice_project/QuizApp)
+1. ✨ QuizApp - [For more info](https://github.com/Carlozzzzz/Laravel9_Learning/tree/main/__practice_project/QuizApp)
    
    ![StudentQuizQuestion](https://github.com/Carlozzzzz/Laravel9_Learning/blob/main/__practice_project/QuizApp/demo_img/student_quiz_question.png)
 
@@ -13,7 +13,7 @@
      - Dynamic creation of questions
      - Resuming quiz(working)
    
-2. ✨ BlogPlatform - [Repo](https://github.com/Carlozzzzz/Laravel9_Learning/tree/main/__practice_project/BlogPlatform)
+2. ✨ BlogPlatform - [For more info](https://github.com/Carlozzzzz/Laravel9_Learning/tree/main/__practice_project/BlogPlatform)
 
    ![Dashboard1](https://github.com/Carlozzzzz/Laravel9_Learning/blob/main/__practice_project/BlogPlatform/demo_img/dashboard_1.png)
 
