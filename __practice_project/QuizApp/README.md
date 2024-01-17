@@ -1,6 +1,6 @@
 # ✨ QuizApp
  
-   ![StudentQuizQuestion](https://github.com/Carlozzzzz/Laravel9_Learning/blob/main/__practice_project/QuizApp/demo_img/student_quiz_question.png)
+       ![StudentQuizQuestion](https://github.com/Carlozzzzz/Laravel9_Learning/blob/main/__practice_project/QuizApp/demo_img/student_quiz_question.png)
    
 ## 😎 Features
  - Login & Registration
