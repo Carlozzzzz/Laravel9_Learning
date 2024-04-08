@@ -33,7 +33,7 @@
                     {{-- FIX ME --}}
                         <a href="{{ route('student.quiz.reattemptQuiz', $data_datarecordfile->id) }}" class="btn btn-primary"><i class="bi bi-arrow-clockwise"></i> Re-attempt</a>
                     @endif
-                    @if(!$data_isMaxAttemptReach && $data_hasResults && $data_isOngoing) 
+                    @if($data_isOngoing) 
                         <a href="{{ route('student.quiz.resumeQuiz', $data_datarecordfile->id) }}" class="btn btn-primary"><i class="bi bi-play-circle-fill"></i> Resume Quiz</a>
                     @endif
                     @if($data_hasResults)

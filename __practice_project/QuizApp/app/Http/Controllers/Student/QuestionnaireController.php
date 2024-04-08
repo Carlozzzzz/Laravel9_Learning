@@ -19,7 +19,12 @@ class QuestionnaireController extends Controller
         $data = array();
         $quizId = $question->quiz_id;
         $quiz = Quiz::with(['latest_student_quiz_details'])->find($quizId);
-        $latestQuizDetailsId = $quiz->latest_student_quiz_details->id;
+        $latestQuizDetails = $quiz->latest_student_quiz_details;
+        if(isset($latestQuizDetails->review_status) && $latestQuizDetails->review_status == "finished") {
+            return redirect()->route('student.quiz.view', $quizId);
+        }
+
+        $latestQuizDetailsId = $latestQuizDetails->id;
         $userId = auth()->user()->id;
 
         $data['data_dataactivepage'] = "student_quiz_question";
@@ -110,16 +115,22 @@ class QuestionnaireController extends Controller
         $prevQuestionOrder = $currentOrder - 1;
     
         $prevQuestion = Question::whereHas('student_question_sort_order', function($query) use ($userId, $prevQuestionOrder) {
-            $query->where('user_id', $userId)
-                ->where('question_order', $prevQuestionOrder);
-        })->with('choices')->first();
+                $query->where('user_id', $userId)
+                    ->where('question_order', $prevQuestionOrder);
+            })
+            ->where('quiz_id', $quizId)
+            ->with('choices')->first();
+
+        // dd($prevQuestion);
 
         $nextQuestionOrder = $currentOrder + 1;
 
         $nextQuestion = Question::whereHas('student_question_sort_order', function($query) use ($userId, $nextQuestionOrder) {
-            $query->where('user_id', $userId)
-                ->where('question_order', $nextQuestionOrder);
-        })->with('choices')->first();
+                    $query->where('user_id', $userId)
+                        ->where('question_order', $nextQuestionOrder);
+                })
+            ->where("quiz_id", $quizId)    
+            ->first();
 
         $xdata['data']['question_order'] = $currentOrder;
         $xdata['data']['current_questionnaire'] = $currrentQuestion;
@@ -128,7 +139,6 @@ class QuestionnaireController extends Controller
         $xdata['data']['quiz'] = Quiz::with(['questions'])
                 ->where('id', $quizId)
                 ->first();
-
 
         return response()->json($xdata, 200);
     }

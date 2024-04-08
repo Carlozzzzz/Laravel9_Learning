@@ -35,6 +35,7 @@
 
 @section('custom-script')
 <script src="{{ asset('/js/Timey.js') }}"></script>
+<script src="{{ asset('/js/Student/Question.js') }}"></script>
 
 <script>
     const QuestionCategories = {
@@ -129,6 +130,7 @@
                     questionnaireArr.push(response.data);
 
                     const questionnaire = createOutputHTML(response.data);
+
 
                     $('#questionnaire-container').append(questionnaire);
                 },
@@ -275,99 +277,41 @@
 
     function createOutputHTML(questionObj){
 
-        function prevAfterHTML(questionObj) {
-            
-            let buttons = '';
-            
-            if(questionObj.prev_questionnaire && questionObj.prev_questionnaire.id !== null) {
-                let prevQuestionnaireUrl = '{{ route("student.quiz.getQuestionnaire", ":id") }}';
-                const prevQuestionId = questionObj.prev_questionnaire.id;
-                prevQuestionnaireUrl = prevQuestionnaireUrl.replace(':id', questionObj.prev_questionnaire.id);
-                
-
-                // buttons += `<a href="${prevQuestionnaireUrl}" class="btn btn-primary me-auto"><< Prev</a>`;
-                buttons += `<button type="button" onclick="submitQuestion('${prevQuestionnaireUrl}')" class="btn btn-primary me-auto"><< Prev</button>`;
-            }
-            
-            if(questionObj.next_questionnaire && questionObj.next_questionnaire.id !== null) {
-                let nextQuestionnaireUrl = '{{ route("student.quiz.getQuestionnaire", ":id") }}';
-                const nextQuestionId = questionObj.next_questionnaire.id;
-                nextQuestionnaireUrl = nextQuestionnaireUrl.replace(':id', nextQuestionId);
-
-                // buttons += `<a href="${nextQuestionnaireUrl}" class="btn btn-primary ms-auto">Next >></a>`;
-                buttons += `<button type="button" onclick="submitQuestion('${nextQuestionnaireUrl}', false)" class="btn btn-primary  ms-auto">Next >></button>`;
-            }
-
-            if(!questionObj.next_questionnaire) {
-                let createResultURL = '{{ route("student.quizresult.result", ":id") }}';
-                createResultURL = createResultURL.replace(':id', quizDetaildId);
-                buttons += `<button type="button" onclick="submitQuestion('${createResultURL}', true)" class="btn btn-primary  ms-auto">Finished</button>`;
-            }
-
-            let html = `
-                <div class="questionnaire-navigation d-flex justify-content-between">
-                    ${buttons}
-                </div>
-            `;
-            return html;
-        }
-
-        const questionCategory = questionObj.current_questionnaire.category;
+        const currentQuestionnaire = questionObj.current_questionnaire;
+        const questionCategory = currentQuestionnaire.category;
         const questionIndex = questionnaireArr.length;
 
-        let choiceHTML = '';
-
-
-        if(questionCategory == QuestionCategories.MULTIPLE_CHOICE || questionCategory == QuestionCategories.TRUE_OR_FALSE) {
-            const choices = questionObj.current_questionnaire.choices;
-
-            const userAnswer = (questionObj.current_questionnaire.student_quiz_answers ?? {}).choice_id ?? false;
-
-            choiceHTML = choices.map((choice, choiceIndex) => {
-                const indexCharacter = indexToAlpha(choiceIndex);
-                let isChecked = "";
-                if(userAnswer && (userAnswer == choice.id)) {
-                    isChecked = "checked";
-                }
-                
-                return `
-                    <label class="form-check-label  border rounded w-100 mb-2 p-2" for="${questionIndex}${indexCharacter}">
-                        <input class="form-check-input" 
-                            type="radio"
-                            name="choice_id"
-                            id="${questionIndex}${indexCharacter}" 
-                            value="${choice.id}"
-                            ${isChecked}>
-                        <span>
-                            ${indexCharacter}. ${choice.choice}
-                        </span>
-                    </label>`;
-                    
-            }).join('');
+        const prevId = (questionObj.prev_questionnaire ?? {}).id ?? null;
+        const nextId = (questionObj.next_questionnaire ?? {}).id ?? null;
+        let buttonsURL = [];
+        
+        if(prevId) {
+            let prevQuestionnaireUrl = '{{ route("student.quiz.getQuestionnaire", ":id") }}';
+            prevQuestionnaireUrl = prevQuestionnaireUrl.replace(':id', prevId);
+            buttonsURL.prevURL = prevQuestionnaireUrl;
+        }
+        
+        if(nextId) {
+            let nextQuestionnaireUrl = '{{ route("student.quiz.getQuestionnaire", ":id") }}';
+            nextQuestionnaireUrl = nextQuestionnaireUrl.replace(':id', nextId);
+            buttonsURL.nextURL = nextQuestionnaireUrl;
         }
 
-        let outputHTML = `
-            <form id="answerForm">
-                <input type="hidden" name="category" value="${questionObj.current_questionnaire.category}">
-                <input type="hidden" name="question_id" value="${questionObj.current_questionnaire.id}">
-                <div class="border rounded mb-4">
-                    <div class="question-container mb-1 bg-green-1 text-light p-3">
-                        <p class="mb-0"><span class="fw-bold">Question ${questionObj.question_order}: </span> ${questionObj.current_questionnaire.question}?</p>
-                    </div>
-                    <div class="choices-container p-3">
-                        <p>Your answer:</p>
+        if(!questionObj.next_questionnaire) {
+            let createResultURL = '{{ route("student.quizresult.result", ":id") }}';
+            createResultURL = createResultURL.replace(':id', quizDetaildId);
+            buttonsURL.resultsURL = createResultURL;
+        }
+        
+        const studentQuestion = new Question(
+            prevId, 
+            nextId, 
+            currentQuestionnaire, 
+            quizDetaildId, 
+            buttonsURL);
 
-                        ${choiceHTML}
+        return studentQuestion.createOutputQuestionnaire();
 
-                    </div>
-                </div>
-                
-            </form>
-
-            ${prevAfterHTML(questionObj)}
-            
-        `;
-        return outputHTML;
     }
 
     const indexToAlpha = (num = 1) => {

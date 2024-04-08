@@ -23,17 +23,29 @@
             const detailsHTML = createQuizResultOutput(details);
             questionResult.append(detailsHTML); 
 
-            console.log("Results", results);
+            results.forEach(result => {
+                const questionnaire = result.question;
+                const choice = questionnaire.student_quiz_answers.choice;
+                const answer = choice.choice;
 
-            results.student_quiz_answer.forEach(result => {
-                console.log(result);
-                const outputHTML = createQuestionnaireOutput(result);
+                const resultData = {
+                    quizId : details.quiz_id,
+                    question : questionnaire.question,
+                    answer : answer,
+                    score : questionnaire.student_quiz_answers.point,
+                    points_per_question : questionnaire.student_quiz_answers.points_per_question,
+                    is_correct : questionnaire.student_quiz_answers.is_correct
+                };
+
+                console.log(resultData);
+
+                const outputHTML = createQuestionnaireOutput(resultData);
                 questionResult.append(outputHTML);
             });
         }
     }
     function createQuizResultOutput(detailsObj) {
-        const quizId = 101;
+        const quizId = detailsObj.quiz_id;
         let quizURL = "{{ route('student.quiz.view', ':id') }}";
         quizURL = quizURL.replace(':id', quizId);
 
@@ -62,9 +74,9 @@
 
         return  `
             <div class="bg-light mb-3 p-3">
-                <p><span class="">Question</span> : <span>${resultObj.question.question}</span></p>
-                <p class=""><span class="fw-bold">Response : </span><span>${resultObj.choice.choice}</span></p>
-                <p class="">Score : ${resultObj.point} / ${resultObj.points_per_question} ${logo}</p>  
+                <p><span class="">Question</span> : <span>${resultObj.question}</span></p>
+                <p class=""><span class="fw-bold">Response : </span><span>${resultObj.answer}</span></p>
+                <p class="">Score : ${resultObj.score} / ${resultObj.points_per_question} ${logo}</p>  
             </div>
         `;
     }

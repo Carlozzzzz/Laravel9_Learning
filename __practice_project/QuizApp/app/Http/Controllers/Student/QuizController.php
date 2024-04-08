@@ -49,6 +49,7 @@ class QuizController extends Controller
         $quizAttempts = (int)$quiz->attempts;
         $latestStuentQuizDetails = $data["data_datarecordfile"]->latest_student_quiz_details ?? null;
 
+        // dd( $latestStuentQuizDetails);
         $studentAttempts = $latestStuentQuizDetails->attempts ?? 0;
         $data["data_studentAttempts"] = $studentAttempts;
 
@@ -234,12 +235,14 @@ class QuizController extends Controller
 
     function isQuizStarted(Quiz $quiz) {
         $currentDate = Carbon::now();
+
         $currentDate = $currentDate->toDateTimeString();
 
         $quizStart = $quiz->start_date;
 
         $isWithinRange = ($currentDate >= $quizStart);
 
+        // dd($isWithinRange, $currentDate, '<= ' , $quizStart);
 
         if($isWithinRange) {
             return true;
