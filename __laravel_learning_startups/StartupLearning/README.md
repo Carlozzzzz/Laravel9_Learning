@@ -17,7 +17,7 @@
             
     ## :running: Run the APP
         npm run dev
-        php artisan serve
+        php artisan serve (http://127.0.0.1:8000/)
    
     ## :briefcase: Resources
             https://colorhunt.co/palette/fffbf5f7efe5c3acd07743db
