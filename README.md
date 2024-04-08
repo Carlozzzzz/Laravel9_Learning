@@ -34,10 +34,10 @@
      
 
 # My other projects
--- will update soon
+      -- will update soon
 
 # Useful Tutorial
-https://www.youtube.com/watch?v=sPMtPrBR5Cc&list=PLKyjE37ORK3IUmxexDccrPbjzkfPU9Vux
+      https://www.youtube.com/watch?v=sPMtPrBR5Cc&list=PLKyjE37ORK3IUmxexDccrPbjzkfPU9Vux
 
 # Setup the Composer-laravel first
         ** run the following commands
@@ -51,7 +51,7 @@ https://www.youtube.com/watch?v=sPMtPrBR5Cc&list=PLKyjE37ORK3IUmxexDccrPbjzkfPU9
 
 
 
-# Usefull commans
+# Usefull commands
     
         *finding file
             -- ctrl + p
