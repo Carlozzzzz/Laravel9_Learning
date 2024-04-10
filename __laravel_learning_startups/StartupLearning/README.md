@@ -84,7 +84,29 @@
             return response()->download($path, $name, $headers);
          });
 
+   ## Controllers
+      -php artisan make controller:UserController 
+      - Route::get('users', [UserController::class, 'index']);
 
+      # middleware('auth')
+         - config/auth
+         - will not allow un-authenticated users to access specic routes
+
+   ## View
+      -must be rendered using Controller
+
+   ## Migration 
+      - php artisan migrate:refresh --seed
+      - php artisan make:migration students_table
+      - php artisan make:factory StudentFactory
+      - allows you to create dummy datas
+      - the seeder will utilize the factory class
+      - migration will create the structure of your table (up, down for create and delete)
+
+   ## Model
+      - php artisan make:model Students
+      - use to access database stuffs
+   
    ## if you have many rss
       - `ctrl + p` - finding files
 
