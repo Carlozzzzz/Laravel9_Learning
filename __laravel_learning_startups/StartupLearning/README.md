@@ -53,36 +53,36 @@
    ## Routes
       - authentication for the users on what they can access
 
-         Route::get();
-         Route::post();
-         Route::put(); - remove whole data then change
-         Route::patch(); - change small portion of data (it's okey not to use this)
-         Route::delete();
-         Route::options(); - controll some allowed method/origin in URL
-         Route::match(['get', 'post'], '/' , function() {
-            return 'POST and GET is allow';
-         }); - allows specific route functions
-         Route::any(); - no filter
-         Route::redirect('/welcome', '/'); - redirect back to '/'
-         Route::permanentRedirect('HTTP', 'HTTPS'); - When you have HTTP redirect it to HTTPS
-         Route::get('/user/{id}/{group}', function($id, $group){
-            return response($id.'-'.$group, 200);
-         });
+      Route::get();
+      Route::post();
+      Route::put(); - remove whole data then change
+      Route::patch(); - change small portion of data (it's okey not to use this)
+      Route::delete();
+      Route::options(); - controll some allowed method/origin in URL
+      Route::match(['get', 'post'], '/' , function() {
+         return 'POST and GET is allow';
+      }); - allows specific route functions
+      Route::any(); - no filter
+      Route::redirect('/welcome', '/'); - redirect back to '/'
+      Route::permanentRedirect('HTTP', 'HTTPS'); - When you have HTTP redirect it to HTTPS
+      Route::get('/user/{id}/{group}', function($id, $group){
+         return response($id.'-'.$group, 200);
+      });
 
-         ### JSON Files
-         Route::get('/request-json', function(){
-            return response()->json(['name' => 'PinoyFreeCoder', 'age' => '23']);
-         });
+      ## JSON Files
+      Route::get('/request-json', function(){
+         return response()->json(['name' => 'PinoyFreeCoder', 'age' => '23']);
+      });
 
-         ### Downloading Files
-            Route::get('/request-download', function() {
-               $name = 'sample.txt';
-               $path = public_path(). '/' . $name;
-               $headers = array(
-                  'Content-type : application/text-plain'
-               );
-               return response()->download($path, $name, $headers);
-            });
+      ## Downloading Files
+         Route::get('/request-download', function() {
+            $name = 'sample.txt';
+            $path = public_path(). '/' . $name;
+            $headers = array(
+               'Content-type : application/text-plain'
+            );
+            return response()->download($path, $name, $headers);
+         });
 
 
    ## if you have many rss
