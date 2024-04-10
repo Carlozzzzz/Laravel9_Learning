@@ -2,55 +2,55 @@
  
    ![StartupLeaningImage](https://github.com/Carlozzzzz/Laravel9_Learning/blob/main/__practice_project/QuizApp/demo_img/student_quiz_question.png)
    
-## 😎 Key Learning
+# 😎 Key Learning
 
-   # API
+   ## API
       - use to access different controllers
-   # Channels
+   ## Channels
       - laravel broadcasting
 
-   # Console
+   ## Console
       - allow you to create your own command
    
-   # Web
+   ## Web
       - accept HTTP request
       - use `middlewares` to protect your routes
 
-   # Bootstrap
+   ## Bootstrap
       - bundled up the core feature/classes
 
-   # Config
+   ## Config
       - appnames
       - authentication
       - database (is where you edit the connection to your database)
       - caches (default in file format)
       - filesystem (need to upload/download files? update it here)
 
-   # Database
+   ## Database
       - Migration files (auto create tables)
       - Factories (define the required data type for your seeders, use faker app)
       - seeders (Create default/sample data)
 
 
-   # Language
+   ## Language
       - not commonly pay attention
 
-   # Public folder
+   ## Public folder
       - this is where you can access public files
 
-   # Resources 
+   ## Resources 
       - this is where add our resources like css and js (most common to be add on Public folder)
       - views
 
-   # Test
+   ## Test
       - for QA
 
-   # Vendor
+   ## Vendor
       - libraries installed from composer.json
 
-## Important Notes
+# Important Notes
    
-   # Routes
+   ## Routes
       - authentication for the users on what they can access
 
          Route::get();
@@ -69,12 +69,12 @@
             return response($id.'-'.$group, 200);
          });
 
-         # JSON Files
+         ### JSON Files
          Route::get('/request-json', function(){
             return response()->json(['name' => 'PinoyFreeCoder', 'age' => '23']);
          });
 
-         # Downloading Files
+         ### Downloading Files
             Route::get('/request-download', function() {
                $name = 'sample.txt';
                $path = public_path(). '/' . $name;
@@ -85,28 +85,29 @@
             });
 
 
-   # if you have many rss
+   ## if you have many rss
       - `ctrl + p` - finding files
 
-   # Errors
+   ## Errors
       - change it on .env files
 
 
-    ## :wrench: Setup
+   ## :wrench: Setup
        basic laravel installation
        php artisan migrate --seed
         
             
-    ## :running: Run the APP
-        npm run dev
-        php artisan serve (http://127.0.0.1:8000/)
-   
-    ## :briefcase: Resources
-            https://colorhunt.co/palette/fffbf5f7efe5c3acd07743db
+   ## :running: Run the APP
+      npm run dev
+      php artisan serve (http://127.0.0.1:8000/)
+
+   ## :briefcase: Resources
+         https://colorhunt.co/palette/fffbf5f7efe5c3acd07743db
     
-## What is?
+# What is?
    - the use of response();
-## 😎 Localhost Acc
+
+# 😎 Localhost Acc
 
       Username: echibot1@gmail.com
       Password: password
