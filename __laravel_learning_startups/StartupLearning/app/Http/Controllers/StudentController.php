@@ -22,7 +22,7 @@ class StudentController extends Controller
 
         /** Exemption */
         $single_data = Students::where('id', 100)->firstOrFail();
-        dd($single_data);
+        // dd($single_data);
         
         return view('students.index', ['data' => $data, 'gender' => $gender]);
     }
