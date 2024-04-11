@@ -22,7 +22,7 @@
             "./resources/**/*.vue",
         ],
 
-    * add the following command at public/css/app.css
+    * add the following command at resources/css/app.css
         @tailwind base;
         @tailwind components;
         @tailwind utilities;
