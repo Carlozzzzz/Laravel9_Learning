@@ -84,6 +84,19 @@
             return response()->download($path, $name, $headers);
          });
 
+      ## Commong routes naming
+         - index : show all data
+         - show : show a single data
+         - create : Show a form to add a new data
+         - store : store a data
+         - edit : show form to edit a data
+         - update : update a data
+         - destroy : delete a data
+         
+   ## Model
+      - php artisan make:model Students
+      - use to access database stuffs
+
    ## Controllers
       -php artisan make controller:UserController 
       - Route::get('users', [UserController::class, 'index']);
@@ -95,6 +108,9 @@
    ## View
       -must be rendered using Controller
 
+   ## Middleware
+      - fix your middleware at Providers/RouteServiceProvider::HOME (remove home or set it to your default page)
+      
    ## Migration 
       - php artisan migrate:refresh --seed
       - php artisan make:migration students_table
@@ -103,10 +119,18 @@
       - the seeder will utilize the factory class
       - migration will create the structure of your table (up, down for create and delete)
 
-   ## Model
-      - php artisan make:model Students
-      - use to access database stuffs
-   
+   ## Global Variables
+      - Providers/AppServiceProvider::boot()
+      - View::share('title', 'Student Admin');
+
+   ## Components
+      - create seperate file for reusable components
+      - views/components/component.blade.php
+
+      - @php $array = array('title' => 'Students Custom System'); @endphp
+      - <x-nav :data="$array"/>
+
+
    ## if you have many rss
       - `ctrl + p` - finding files
 

@@ -19,12 +19,19 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('users', [UserController::class, 'index'])->name('login');
 // Route::get('user/{id}', [UserController::class, 'show'])->middleware('auth');
-Route::get('user/{id}', [UserController::class, 'show']);
+
+/** User Management */
+Route::get('/login', [UserController::class, 'login'])->name('login')->middleware('guest');
+Route::post('/login/process', [UserController::class, 'process']);
+Route::get('/register', [UserController::class, 'register']);
+Route::post('/logout', [UserController::class, 'logout']);
+
+Route::post('/store', [UserController::class, 'store']);
+Route::get('/user/{id}', [UserController::class, 'show']);
 
 
 /** Student Controller */
-Route::get('/', [StudentController::class, 'index']);
+Route::get('/', [StudentController::class, 'index'])->middleware('auth');
 Route::get('/students', [StudentController::class, 'index']);
 Route::get('/students/{id}', [StudentController::class, 'show']);

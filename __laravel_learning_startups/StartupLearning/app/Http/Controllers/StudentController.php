@@ -25,7 +25,11 @@ class StudentController extends Controller
         // dd($single_data);
         
         return view('students.index', ['data' => $data, 'gender' => $gender]);
+
+        // return view('students.index');
     }
+
+   
 
     public function show($id) {
         /** Exemption */
