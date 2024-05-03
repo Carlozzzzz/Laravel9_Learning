@@ -33,5 +33,10 @@ Route::get('/user/{id}', [UserController::class, 'show']);
 
 /** Student Controller */
 Route::get('/', [StudentController::class, 'index'])->middleware('auth');
+
 Route::get('/students', [StudentController::class, 'index']);
-Route::get('/students/{id}', [StudentController::class, 'show']);
+
+Route::get('/add/student', [StudentController::class, 'create']);
+Route::post('/add/student', [StudentController::class, 'store']);
+Route::get('/student/{id}', [StudentController::class, 'show']);
+Route::put('/student/{id}', [StudentController::class, 'update']);

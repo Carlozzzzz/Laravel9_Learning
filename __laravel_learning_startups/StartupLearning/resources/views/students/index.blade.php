@@ -28,6 +28,9 @@
                         <th scope="col" class="py-3 px-6">
                             Email
                         </th>
+                        <th scope="col">
+
+                        </th>
                     </tr>
                 </thead>
 
@@ -46,10 +49,17 @@
                             <td class="py-4 px-6">
                                 {{ $student->email }}
                             </td>
+                            <td>
+                                <a href="/student/{{ $student->id }}" class="bg-sky-600 text-white px-4 py-2 rounded">View</a>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
+
             </table>
+            <div class="pt-6 p-4 max-w-lg m-auto">
+                {{ $data->links() }}
+            </div>
         </div>
     </section>
 
